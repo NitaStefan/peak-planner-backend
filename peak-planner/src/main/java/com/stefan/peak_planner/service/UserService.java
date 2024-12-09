@@ -9,7 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @org.springframework.stereotype.Service
-public class Service {
+public class UserService {
 
     private final UserDao userDao;
 
@@ -20,7 +20,7 @@ public class Service {
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(10);
 
     @Autowired
-    public Service(UserDao userDao, AuthenticationManager authenticationManager, JWTService jwtService) {
+    public UserService(UserDao userDao, AuthenticationManager authenticationManager, JWTService jwtService) {
 
         this.userDao = userDao;
         this.authenticationManager = authenticationManager;
@@ -39,7 +39,7 @@ public class Service {
                 .authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
 
         if (authentication.isAuthenticated())
-            return "Success"; // generateToken() method
+            return jwtService.generateToken(user.getUsername());
 
         return "Fail"; // actually returns 401 Unauthorized
     }

@@ -32,23 +32,24 @@ public class AuthService {
         user.setPassword(encoder.encode(user.getPassword()));
         userDao.save(user);
 
-        String token = jwtService.generateToken(user.getUsername());
+        String accessToken = jwtService.generateAccessToken(user.getUsername());
+        String refreshToken = jwtService.generateRefreshToken(user.getUsername());
 
-        return new AuthenticationResponse(token);
+        return new AuthenticationResponse(accessToken, refreshToken);
     }
 
     public AuthenticationResponse authenticate(User user) {
 
-        // returns 403 Forbidden resp if not authenticated
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword())
         );
 
         if (authentication.isAuthenticated()) {
 
-            String token = jwtService.generateToken(user.getUsername());
+            String accessToken = jwtService.generateAccessToken(user.getUsername());
+            String refreshToken = jwtService.generateRefreshToken(user.getUsername());
 
-            return new AuthenticationResponse(token);
+            return new AuthenticationResponse(accessToken, refreshToken);
         }
 
         throw new BadCredentialsException("Invalid username or password");

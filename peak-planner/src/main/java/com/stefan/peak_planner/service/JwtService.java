@@ -4,38 +4,42 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
-import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
 import java.util.Date;
 import java.util.function.Function;
 
 @Service
 public class JwtService {
 
-    private final String secretKey;
+    @Value("${application.security.jwt.secret-key}")
+    private String secretKey;
 
-    public JwtService() {
+    @Value("${application.security.jwt.access-token-exp}")
+    private long accessTokenExp;
 
-        try {
-            KeyGenerator keyGen = KeyGenerator.getInstance("HmacSHA256");
-            SecretKey sk = keyGen.generateKey();
-            secretKey = Base64.getEncoder().encodeToString(sk.getEncoded());
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
+    @Value("${application.security.jwt.refresh-token-exp}")
+    private long refreshTokenExp;
+
+    public String generateAccessToken(String username) {
+
+        return generateToken(username, accessTokenExp);
     }
 
-    public String generateToken(String username) {
+    public String generateRefreshToken(String username) {
+
+        return generateToken(username, refreshTokenExp);
+    }
+
+    private String generateToken(String username, long expireTime) {
 
         return Jwts.builder()
                 .subject(username)
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
+                .expiration(new Date(System.currentTimeMillis() + expireTime))
                 .signWith(getSigninKey())
                 .compact();
     }

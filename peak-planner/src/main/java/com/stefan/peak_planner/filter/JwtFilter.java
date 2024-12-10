@@ -59,7 +59,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-                // mark user as authenticated
+                // mark user as authenticated for the duration of the request
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
         }

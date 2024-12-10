@@ -1,14 +1,25 @@
 package com.stefan.peak_planner.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class AuthenticationResponse {
 
-    private final String token;
+    @JsonProperty("access_token")
+    private final String accessToken;
 
-    public AuthenticationResponse(String token) {
-        this.token = token;
+    @JsonProperty("refresh_token")
+    private final String refreshToken;
+
+    public AuthenticationResponse(String accessToken, String refreshToken) {
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
     }
 
-    public String getToken() {
-        return token;
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public String getRefreshToken() {
+        return refreshToken;
     }
 }

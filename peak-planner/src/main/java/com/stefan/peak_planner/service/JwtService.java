@@ -12,16 +12,14 @@ import javax.crypto.SecretKey;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.function.Function;
 
 @Service
-public class JWTService {
+public class JwtService {
 
     private final String secretKey;
 
-    public JWTService() {
+    public JwtService() {
 
         try {
             KeyGenerator keyGen = KeyGenerator.getInstance("HmacSHA256");
@@ -34,20 +32,15 @@ public class JWTService {
 
     public String generateToken(String username) {
 
-        Map<String, Object> claims = new HashMap<>();
-
         return Jwts.builder()
-                .claims()
-                .add(claims)
                 .subject(username)
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 30))
-                .and()
-                .signWith(getKey())
+                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
+                .signWith(getSigninKey())
                 .compact();
     }
 
-    private SecretKey getKey() {
+    private SecretKey getSigninKey() {
 
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
 
@@ -55,8 +48,16 @@ public class JWTService {
     }
 
     public String extractUsername(String token) {
-        // extract the username from jwt token
+
         return extractClaim(token, Claims::getSubject);
+    }
+
+    // check if the extracted username is the same as the authenticated user's
+    public boolean isValid(String token, UserDetails user) {
+
+        String username = extractUsername(token);
+
+        return username.equals(user.getUsername()) && !isTokenExpired(token);
     }
 
     private <T> T extractClaim(String token, Function<Claims, T> claimResolver) {
@@ -66,15 +67,10 @@ public class JWTService {
 
     private Claims extractAllClaims(String token) {
         return Jwts.parser()
-                .verifyWith(getKey())
+                .verifyWith(getSigninKey())
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
-    }
-
-    public boolean validateToken(String token, UserDetails userDetails) {
-        final String userName = extractUsername(token);
-        return (userName.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
     private boolean isTokenExpired(String token) {

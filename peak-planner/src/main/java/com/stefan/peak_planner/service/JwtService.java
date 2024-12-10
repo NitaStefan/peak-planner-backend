@@ -1,5 +1,6 @@
 package com.stefan.peak_planner.service;
 
+import com.stefan.peak_planner.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -84,5 +85,4 @@ public class JwtService {
     private Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
-
 }

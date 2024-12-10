@@ -26,12 +26,9 @@ public class SecurityConfig {
 
     private final JwtFilter jwtFilter;
 
-    private final AccessDeniedHandler accessDeniedHandler;
-
-    public SecurityConfig(UserDetailsService userDetailsService, JwtFilter jwtFilter, AccessDeniedHandler accessDeniedHandler) {
+    public SecurityConfig(UserDetailsService userDetailsService, JwtFilter jwtFilter) {
         this.userDetailsService = userDetailsService;
         this.jwtFilter = jwtFilter;
-        this.accessDeniedHandler = accessDeniedHandler;
     }
 
     @Bean
@@ -39,11 +36,13 @@ public class SecurityConfig {
 
         return http.csrf(AbstractHttpConfigurer::disable).
                 authorizeHttpRequests(request -> request
-                        .requestMatchers("/register/**", "/login/**").permitAll()
+                        .requestMatchers("/register/**", "/login/**", "/refresh_token/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .userDetailsService(userDetailsService)
-                .exceptionHandling(e -> e.accessDeniedHandler(accessDeniedHandler)
+                .exceptionHandling(e -> e.accessDeniedHandler(
+                                ((request, response, accessDeniedException) -> response.setStatus(403))
+                                )
                         .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
                 ) // 403 in case of permission
 

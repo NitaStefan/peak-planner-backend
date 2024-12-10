@@ -4,6 +4,7 @@ import com.stefan.peak_planner.model.AuthenticationResponse;
 import com.stefan.peak_planner.model.User;
 import com.stefan.peak_planner.service.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,5 +36,14 @@ public class AuthController {
     public ResponseEntity<AuthenticationResponse> login(@RequestBody User user){
 
         return ResponseEntity.ok(authService.authenticate(user));
+    }
+
+    @PostMapping("/refresh_token")
+    public ResponseEntity refreshToken(
+            HttpServletRequest request,
+            HttpServletResponse response
+    ) {
+
+        return authService.refreshToken(request, response);
     }
 }

@@ -22,8 +22,7 @@ public class DayOfWeek {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany
-    @JoinColumn(name = "day_of_week_id")
+    @OneToMany(mappedBy = "dayOfWeek", cascade = CascadeType.ALL)
     private List<Activity> activities = new ArrayList<>();
 
     public DayOfWeek() {

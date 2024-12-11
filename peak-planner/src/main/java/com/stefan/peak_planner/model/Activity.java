@@ -1,5 +1,6 @@
 package com.stefan.peak_planner.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.time.LocalTime;
@@ -21,6 +22,11 @@ public class Activity {
 
     @Column(name = "priority")
     private byte priority;
+
+    @ManyToOne
+    @JoinColumn(name = "day_of_week_id")
+    @JsonIgnore
+    private DayOfWeek dayOfWeek;
 
     public Activity() {
     }
@@ -55,5 +61,13 @@ public class Activity {
 
     public void setPriority(byte priority) {
         this.priority = priority;
+    }
+
+    public DayOfWeek getDayOfWeek() {
+        return dayOfWeek;
+    }
+
+    public void setDayOfWeek(DayOfWeek dayOfWeek) {
+        this.dayOfWeek = dayOfWeek;
     }
 }

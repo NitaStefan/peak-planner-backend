@@ -3,6 +3,7 @@ package com.stefan.peak_planner.controller;
 import com.stefan.peak_planner.model.AuthenticationResponse;
 import com.stefan.peak_planner.model.User;
 import com.stefan.peak_planner.service.AuthService;
+import com.stefan.peak_planner.service.DayOfWeekService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
@@ -14,22 +15,24 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class AuthController {
 
-    AuthService authService;
+    private final AuthService authService;
 
-    public AuthController(AuthService userService) {
-        this.authService = userService;
-    }
+    private final DayOfWeekService dayOfWeekService;
 
-    // test
-    @GetMapping("/")
-    public String greet(HttpServletRequest httpServletRequest) {
-        return "Welcome to the App " + httpServletRequest.getSession().getId();
+
+    public AuthController(AuthService authService, DayOfWeekService dayOfWeekService) {
+        this.authService = authService;
+        this.dayOfWeekService = dayOfWeekService;
     }
 
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(@RequestBody User user) {
 
-        return ResponseEntity.ok(authService.register(user));
+        ResponseEntity<AuthenticationResponse> response = ResponseEntity.ok(authService.register(user));
+
+        dayOfWeekService.createDaysOfWeek(user);
+
+        return response;
     }
 
     @PostMapping("/login")

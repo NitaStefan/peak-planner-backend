@@ -6,6 +6,8 @@ import com.stefan.peak_planner.service.AuthService;
 import com.stefan.peak_planner.service.DayOfWeekService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,11 +28,11 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(@RequestBody User user) {
 
-        ResponseEntity<AuthenticationResponse> response = ResponseEntity.ok(authService.register(user));
+        AuthenticationResponse authResponse = authService.register(user);
 
         dayOfWeekService.createDaysOfWeek(user);
 
-        return response;
+        return new ResponseEntity<>(authResponse, HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
@@ -40,11 +42,8 @@ public class AuthController {
     }
 
     @PostMapping("/refresh_token")
-    public ResponseEntity refreshToken(
-            HttpServletRequest request,
-            HttpServletResponse response
-    ) {
+    public ResponseEntity refreshToken(HttpServletRequest request) {
 
-        return authService.refreshToken(request, response);
+        return authService.refreshToken(request);
     }
 }

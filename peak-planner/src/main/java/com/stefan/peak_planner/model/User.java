@@ -1,6 +1,7 @@
 package com.stefan.peak_planner.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -15,13 +16,16 @@ public class User implements UserDetails {
     @Column(name = "id")
     private int id;
 
+    // Validation
     @Column(name = "username")
+    @Size(max = 20, message = "Username must be at most 20 characters")
     private String username;
 
     @Column(name = "email")
     private String email;
 
     @Column(name = "password")
+    @Size(min = 6, message = "Password must be at least 6 characters")
     private String password;
 
     public User() {

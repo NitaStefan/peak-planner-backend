@@ -2,6 +2,7 @@ package com.stefan.peak_planner.service;
 
 import com.stefan.peak_planner.dao.ActivityDao;
 import com.stefan.peak_planner.dao.DayOfWeekDao;
+import com.stefan.peak_planner.exception.ResourceNotFoundException;
 import com.stefan.peak_planner.model.Activity;
 import com.stefan.peak_planner.model.DayOfWeek;
 import com.stefan.peak_planner.model.User;
@@ -41,14 +42,20 @@ public class DayOfWeekService {
         dayOfWeekDao.saveAll(daysOfWeek);
     }
 
-    // TODO: handle exceptions for when they are thrown
-    // https://medium.com/thefreshwrites/exception-handling-spring-boot-rest-api-c2656b575fee
     @Transactional
     public Activity addActivityToDayOfWeek(int dayId, Activity activity) {
 
-        DayOfWeek day = dayOfWeekDao.findById(dayId).orElseThrow(() -> new RuntimeException("Day not found"));
+        DayOfWeek day = dayOfWeekDao.findById(dayId)
+                .orElseThrow(() -> new ResourceNotFoundException("Day not found"));
+
         activity.setDayOfWeek(day);
 
         return activityDao.save(activity);
+    }
+
+    public DayOfWeek findDayOfWeekById(int dayId) {
+
+        return dayOfWeekDao.findById(dayId)
+                .orElseThrow(() -> new ResourceNotFoundException("Day not found"));
     }
 }

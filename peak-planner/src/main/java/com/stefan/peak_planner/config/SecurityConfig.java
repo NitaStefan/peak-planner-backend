@@ -39,11 +39,10 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .userDetailsService(userDetailsService)
-                .exceptionHandling(e -> e.accessDeniedHandler(
-                                ((request, response, accessDeniedException) -> response.setStatus(403))
-                                )
+                .exceptionHandling(e -> e
+                        .accessDeniedHandler(((request, response, accessDeniedException) -> response.setStatus(403)))
                         .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
-                ) // 403 in case of permission
+                )
 
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)

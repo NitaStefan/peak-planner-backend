@@ -1,5 +1,6 @@
 package com.stefan.peak_planner.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ public class DayOfWeek {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
 
     @OneToMany(mappedBy = "dayOfWeek", cascade = CascadeType.ALL)

@@ -2,6 +2,8 @@ package com.stefan.peak_planner.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 
 import java.time.LocalTime;
 
@@ -21,6 +23,8 @@ public class Activity {
     private LocalTime startTime;
 
     @Column(name = "priority")
+    @Min(value = 1, message = "Priority must be at least 1")
+    @Max(value = 10, message = "Priority must be at most 10")
     private byte priority;
 
     @ManyToOne

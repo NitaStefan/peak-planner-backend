@@ -1,19 +1,26 @@
 package com.stefan.peak_planner.service;
 
 import com.stefan.peak_planner.dao.UserDao;
+import com.stefan.peak_planner.exception.ConflictException;
 import com.stefan.peak_planner.model.AuthenticationResponse;
 import com.stefan.peak_planner.model.User;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @org.springframework.stereotype.Service
 public class AuthService {
@@ -35,6 +42,9 @@ public class AuthService {
 
     public AuthenticationResponse register(User user) {
 
+        // trigger validation before encoding the password
+        validateUser(user);
+
         user.setPassword(encoder.encode(user.getPassword()));
         userDao.save(user);
 
@@ -46,29 +56,21 @@ public class AuthService {
 
     public AuthenticationResponse authenticate(User user) {
 
-        Authentication authentication = authenticationManager.authenticate(
+        authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword())
-        );
+        ); // throws BadCredentialsException if authentication fails
 
-        if (authentication.isAuthenticated()) {
+        String accessToken = jwtService.generateAccessToken(user.getUsername());
+        String refreshToken = jwtService.generateRefreshToken(user.getUsername());
 
-            String accessToken = jwtService.generateAccessToken(user.getUsername());
-            String refreshToken = jwtService.generateRefreshToken(user.getUsername());
-
-            return new AuthenticationResponse(accessToken, refreshToken);
-        }
-
-        throw new BadCredentialsException("Invalid username or password");
+        return new AuthenticationResponse(accessToken, refreshToken);
     }
 
-    public ResponseEntity refreshToken(
-            HttpServletRequest request,
-            HttpServletResponse response
-    ) {
+    public ResponseEntity refreshToken(HttpServletRequest request) {
 
         String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 
-        if(authHeader == null || !authHeader.startsWith("Bearer "))
+        if (authHeader == null || !authHeader.startsWith("Bearer "))
             return new ResponseEntity(HttpStatus.UNAUTHORIZED);
 
         String token = authHeader.substring(7);
@@ -79,9 +81,9 @@ public class AuthService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         // check if refresh token is valid
-        if(jwtService.isValid(token, user)) {
+        if (jwtService.isValid(token, user)) {
 
-            //generate access token
+            // generate access token
             String accessToken = jwtService.generateAccessToken(username);
             String refreshToken = jwtService.generateRefreshToken(username);
 
@@ -89,5 +91,26 @@ public class AuthService {
         }
 
         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+    }
+
+    private void validateUser(User user) {
+
+        if (userDao.existsByEmail(user.getEmail())) {
+            throw new ConflictException("The email address is already associated with an existing account");
+        }
+
+        if (userDao.existsByUsername(user.getUsername())) {
+            throw new ConflictException("Username already exists");
+        }
+
+        // Validate user's constraints
+        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+        Set<ConstraintViolation<User>> violations = validator.validate(user);
+        if (!violations.isEmpty()) {
+            String errorMessage = violations.stream()
+                    .map(ConstraintViolation::getMessage)
+                    .collect(Collectors.joining(", "));
+            throw new ConstraintViolationException(errorMessage, violations);
+        }
     }
 }

@@ -4,8 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Size;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "activity")
@@ -17,6 +20,7 @@ public class Activity {
     private int id;
 
     @Column(name = "name")
+    @Size(max = 45, message = "The name of the activity should be at most 45 characters")
     private String name;
 
     @Column(name = "start_time")
@@ -26,6 +30,9 @@ public class Activity {
     @Min(value = 1, message = "Priority must be at least 1")
     @Max(value = 10, message = "Priority must be at most 10")
     private byte priority;
+
+    @OneToMany(mappedBy = "activity", cascade = CascadeType.ALL)
+    private List<ActivityStep> activitySteps = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "day_of_week_id")
@@ -65,6 +72,14 @@ public class Activity {
 
     public void setPriority(byte priority) {
         this.priority = priority;
+    }
+
+    public List<ActivityStep> getActivitySteps() {
+        return activitySteps;
+    }
+
+    public void setActivitySteps(List<ActivityStep> activitySteps) {
+        this.activitySteps = activitySteps;
     }
 
     public DayOfWeek getDayOfWeek() {

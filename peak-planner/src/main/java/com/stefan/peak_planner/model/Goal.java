@@ -4,9 +4,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "goal")
-public class Goal {
+public class Goal implements UserOwned{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,6 +19,9 @@ public class Goal {
     @Column(name = "title")
     @Size(max = 45, message = "The title should be at most 45 characters")
     private String title;
+
+    @OneToMany(mappedBy = "goal", cascade = CascadeType.ALL)
+    private List<Task> tasks = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -39,6 +45,14 @@ public class Goal {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public List<Task> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks;
     }
 
     public User getUser() {

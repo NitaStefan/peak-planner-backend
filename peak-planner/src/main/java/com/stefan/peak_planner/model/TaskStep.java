@@ -21,7 +21,7 @@ public class TaskStep {
     private int days;
 
     @ManyToOne
-    @JoinColumn(name = "activity_id")
+    @JoinColumn(name = "task_id")
     @JsonIgnore
     private Task task;
 

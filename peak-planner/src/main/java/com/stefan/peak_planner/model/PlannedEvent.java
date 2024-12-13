@@ -9,7 +9,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "planned_event")
-public class PlannedEvent {
+public class PlannedEvent implements UserOwned{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

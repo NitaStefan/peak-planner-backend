@@ -16,7 +16,6 @@ public class User implements UserDetails {
     @Column(name = "id")
     private int id;
 
-    // Validation
     @Column(name = "username")
     @Size(max = 20, message = "Username must be at most 20 characters")
     private String username;
@@ -93,5 +92,14 @@ public class User implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                '}';
     }
 }

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class DayOfWeekController {
 
-    private DayOfWeekService dayOfWeekService;
+    private final DayOfWeekService dayOfWeekService;
 
     public DayOfWeekController(DayOfWeekService dayOfWeekService) {
         this.dayOfWeekService = dayOfWeekService;

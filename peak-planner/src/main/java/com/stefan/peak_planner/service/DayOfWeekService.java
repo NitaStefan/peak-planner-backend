@@ -16,9 +16,9 @@ import java.util.List;
 @Service
 public class DayOfWeekService {
 
-    private DayOfWeekDao dayOfWeekDao;
+    private final DayOfWeekDao dayOfWeekDao;
 
-    private ActivityDao activityDao;
+    private final ActivityDao activityDao;
 
     public DayOfWeekService(DayOfWeekDao dayOfWeekDao, ActivityDao activityDao) {
         this.dayOfWeekDao = dayOfWeekDao;

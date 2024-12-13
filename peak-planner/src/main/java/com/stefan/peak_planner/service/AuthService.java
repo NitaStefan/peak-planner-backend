@@ -66,28 +66,17 @@ public class AuthService {
         return new AuthenticationResponse(accessToken, refreshToken);
     }
 
-    public ResponseEntity refreshToken(HttpServletRequest request) {
+    public ResponseEntity<AuthenticationResponse> refreshToken(HttpServletRequest request) {
 
-        String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+        User user = extractUserFromRequest(request);
 
-        if (authHeader == null || !authHeader.startsWith("Bearer "))
-            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
-
-        String token = authHeader.substring(7);
-
-        String username = jwtService.extractUsername(token);
-
-        User user = userDao.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-
-        // check if refresh token is valid
-        if (jwtService.isValid(token, user)) {
+        if (user != null) {
 
             // generate access token
-            String accessToken = jwtService.generateAccessToken(username);
-            String refreshToken = jwtService.generateRefreshToken(username);
+            String accessToken = jwtService.generateAccessToken(user.getUsername());
+            String refreshToken = jwtService.generateRefreshToken(user.getUsername());
 
-            return new ResponseEntity(new AuthenticationResponse(accessToken, refreshToken), HttpStatus.OK);
+            return new ResponseEntity<>(new AuthenticationResponse(accessToken, refreshToken), HttpStatus.OK);
         }
 
         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -112,5 +101,25 @@ public class AuthService {
                     .collect(Collectors.joining(", "));
             throw new ConstraintViolationException(errorMessage, violations);
         }
+    }
+
+    public User extractUserFromRequest(HttpServletRequest request) {
+
+        String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+
+        if (authHeader == null || !authHeader.startsWith("Bearer "))
+            return null;
+
+        String token = authHeader.substring(7);
+
+        String username = jwtService.extractUsername(token);
+
+        User user = userDao.findByUsername(username)
+                .orElse(null);
+
+        if (user == null || !jwtService.isValid(token, user))
+            return null; // Invalid user or token
+
+        return user;
     }
 }

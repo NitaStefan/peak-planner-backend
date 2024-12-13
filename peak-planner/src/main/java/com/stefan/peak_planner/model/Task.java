@@ -2,6 +2,7 @@ package com.stefan.peak_planner.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ public class Task {
     private int id;
 
     @Column(name = "name")
+    @Size(max = 45, message = "The name of the task should be at most 45 characters")
     private String name;
 
     @Column(name = "start_date")

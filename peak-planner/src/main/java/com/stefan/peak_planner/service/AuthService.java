@@ -88,7 +88,7 @@ public class AuthService {
             throw new ConflictException("The email address is already associated with an existing account");
         }
 
-        if (userDao.existsByUsername(user.getUsername())) {
+        if (userDao.existsByUsername(user.getRealUsername())) {
             throw new ConflictException("Username already exists");
         }
 
@@ -112,9 +112,9 @@ public class AuthService {
 
         String token = authHeader.substring(7);
 
-        String username = jwtService.extractUsername(token);
+        String email = jwtService.extractUsername(token);
 
-        User user = userDao.findByUsername(username)
+        User user = userDao.findByEmail(email)
                 .orElse(null);
 
         if (user == null || !jwtService.isValid(token, user))

@@ -44,6 +44,8 @@ public class User implements UserDetails {
         this.id = id;
     }
 
+    public String getRealUsername() { return this.username; }
+
     public void setUsername(String username) {
         this.username = username;
     }
@@ -66,7 +68,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return username;
+        return email;
     }
 
     @Override

@@ -10,5 +10,5 @@ import java.util.List;
 @Repository
 public interface PlannedEventDao extends JpaRepository<PlannedEvent, Integer> {
 
-    List<PlannedEvent> findByUser(User user);
+    List<PlannedEvent> findByUserOrderByScheduledDate(User user);
 }

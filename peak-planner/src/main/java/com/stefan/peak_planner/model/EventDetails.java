@@ -1,6 +1,7 @@
 package com.stefan.peak_planner.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Size;
@@ -9,6 +10,7 @@ import java.time.LocalTime;
 
 @Entity
 @Table(name = "event_details")
+@JsonInclude(JsonInclude.Include.NON_DEFAULT)
 public class EventDetails {
 
     @Id

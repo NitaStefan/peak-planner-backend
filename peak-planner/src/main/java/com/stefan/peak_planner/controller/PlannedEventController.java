@@ -31,9 +31,25 @@ public class PlannedEventController {
     @PostMapping
     public ResponseEntity<PlannedEvent> addPlannedEvent(@RequestBody PlannedEvent plannedEvent) {
 
-        PlannedEvent dbPlannedEvent = plannedEventService.addPlannedEvent(plannedEvent);
+        PlannedEvent dbPlannedEvent = plannedEventService.savePlannedEvent(plannedEvent);
 
         return new ResponseEntity<>(dbPlannedEvent, HttpStatus.CREATED);
+    }
+
+    @PutMapping
+    public ResponseEntity<PlannedEvent> updatePlannedEvent(@RequestBody PlannedEvent plannedEvent) {
+
+        PlannedEvent dbPlannedEvent = plannedEventService.savePlannedEvent(plannedEvent);
+
+        return new ResponseEntity<>(dbPlannedEvent, HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/{plannedEventId}")
+    public ResponseEntity<Void> addEventDetailsToPlannedEvent(@PathVariable int plannedEventId)
+    {
+        plannedEventService.deletePlannedEvent(plannedEventId);
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/{plannedEventId}/event-details")

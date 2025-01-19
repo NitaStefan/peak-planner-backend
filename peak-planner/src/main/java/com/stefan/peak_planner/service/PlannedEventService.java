@@ -24,7 +24,10 @@ public class PlannedEventService {
     }
 
     @Transactional
-    public PlannedEvent addPlannedEvent(PlannedEvent plannedEvent) {
+    public PlannedEvent savePlannedEvent(PlannedEvent plannedEvent) {
+
+        for (EventDetails eventDetails: plannedEvent.getEventDetails())
+            eventDetails.setPlannedEvent(plannedEvent);
 
         return plannedEventDao.save(plannedEvent);
     }
@@ -43,5 +46,10 @@ public class PlannedEventService {
         eventDetails.setPlannedEvent(plannedEvent);
 
         return eventDetailsDao.save(eventDetails);
+    }
+
+    public void deletePlannedEvent(int plannedEventId) {
+
+        plannedEventDao.deleteById(plannedEventId);
     }
 }

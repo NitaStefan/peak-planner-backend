@@ -23,7 +23,7 @@ public class UserAssociationAspect {
         this.authService = authService;
     }
 
-    @Before("execution(com.stefan.peak_planner.model.UserOwned+ com.stefan.peak_planner.service.*.add*(com.stefan.peak_planner.model.UserOwned+))")
+    @Before("execution(com.stefan.peak_planner.model.UserOwned+ com.stefan.peak_planner.service.*.save*(com.stefan.peak_planner.model.UserOwned+))")
     public void associateUserToAddedEntity(JoinPoint joinPoint) {
 
         // retrieve current user

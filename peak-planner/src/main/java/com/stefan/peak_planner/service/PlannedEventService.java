@@ -52,4 +52,10 @@ public class PlannedEventService {
 
         plannedEventDao.deleteById(plannedEventId);
     }
+
+
+    public void deleteEventDetail(int eventDetailId) {
+
+        eventDetailsDao.deleteById(eventDetailId);
+    }
 }

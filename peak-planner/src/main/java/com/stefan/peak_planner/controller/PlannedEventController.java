@@ -35,7 +35,14 @@ public class PlannedEventController {
 
         return new ResponseEntity<>(dbPlannedEvent, HttpStatus.CREATED);
     }
-
+//    @PostMapping("/{plannedEventId}/event-details")
+//    public ResponseEntity<EventDetails> addEventDetailsToPlannedEvent
+//            (@PathVariable int plannedEventId, @RequestBody EventDetails eventDetails)
+//    {
+//        EventDetails dbEventDetails = plannedEventService.addEventDetailsToPlannedEvent(plannedEventId, eventDetails);
+//
+//        return new ResponseEntity<>(dbEventDetails, HttpStatus.CREATED);
+//    }
     @PutMapping
     public ResponseEntity<PlannedEvent> updatePlannedEvent(@RequestBody PlannedEvent plannedEvent) {
 
@@ -49,15 +56,14 @@ public class PlannedEventController {
     {
         plannedEventService.deletePlannedEvent(plannedEventId);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    @DeleteMapping("/event-details/{eventDetailId}")
+    public ResponseEntity<Void> deleteEventDetail(@PathVariable int eventDetailId) {
+
+        plannedEventService.deleteEventDetail(eventDetailId);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PostMapping("/{plannedEventId}/event-details")
-    public ResponseEntity<EventDetails> addEventDetailsToPlannedEvent
-            (@PathVariable int plannedEventId, @RequestBody EventDetails eventDetails)
-    {
-        EventDetails dbEventDetails = plannedEventService.addEventDetailsToPlannedEvent(plannedEventId, eventDetails);
-
-        return new ResponseEntity<>(dbEventDetails, HttpStatus.CREATED);
-    }
 }

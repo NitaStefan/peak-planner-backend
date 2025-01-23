@@ -53,9 +53,8 @@ public class PlannedEventService {
         plannedEventDao.deleteById(plannedEventId);
     }
 
+    public void deleteEventDetails(List<Integer> eventDetailIds) {
 
-    public void deleteEventDetail(int eventDetailId) {
-
-        eventDetailsDao.deleteById(eventDetailId);
+        for (Integer id : eventDetailIds)  eventDetailsDao.deleteById(id);
     }
 }

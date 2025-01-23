@@ -58,10 +58,10 @@ public class PlannedEventController {
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-    @DeleteMapping("/event-details/{eventDetailId}")
-    public ResponseEntity<Void> deleteEventDetail(@PathVariable int eventDetailId) {
+    @DeleteMapping("/event-details")
+    public ResponseEntity<Void> deleteEventDetails(@RequestBody List<Integer> eventDetailIds) {
 
-        plannedEventService.deleteEventDetail(eventDetailId);
+        plannedEventService.deleteEventDetails(eventDetailIds);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

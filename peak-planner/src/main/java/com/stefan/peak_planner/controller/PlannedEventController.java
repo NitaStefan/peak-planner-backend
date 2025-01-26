@@ -1,7 +1,5 @@
 package com.stefan.peak_planner.controller;
 
-import com.stefan.peak_planner.model.Activity;
-import com.stefan.peak_planner.model.EventDetails;
 import com.stefan.peak_planner.model.PlannedEvent;
 import com.stefan.peak_planner.service.PlannedEventService;
 import org.springframework.http.HttpStatus;

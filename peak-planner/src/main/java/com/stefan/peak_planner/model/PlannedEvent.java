@@ -61,4 +61,5 @@ public class PlannedEvent implements UserOwned{
     public void setUser(User user) {
         this.user = user;
     }
+
 }

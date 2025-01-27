@@ -8,8 +8,8 @@ import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "flexible_event")
-public class FlexibleEvent implements UserOwned {
+@Table(name = "step")
+public class Step {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,7 +21,7 @@ public class FlexibleEvent implements UserOwned {
     private String title;
 
     @Column(name = "description")
-    @Size(max = 400, message = "Description is too long (max. 400 characters)")
+    @Size(max = 400, message = "Description is too long (max. 400 characters). Try to be more concise or create a new step")
     private String description;
 
     @Column(name = "start_date")
@@ -32,11 +32,11 @@ public class FlexibleEvent implements UserOwned {
     private short days;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "goal_id")
     @JsonIgnore
-    private User user;
+    private Goal goal;
 
-    public FlexibleEvent() {
+    public Step() {
     }
 
     public int getId() {
@@ -79,11 +79,11 @@ public class FlexibleEvent implements UserOwned {
         this.days = days;
     }
 
-    public User getUser() {
-        return user;
+    public Goal getGoal() {
+        return goal;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setGoal(Goal goal) {
+        this.goal = goal;
     }
 }

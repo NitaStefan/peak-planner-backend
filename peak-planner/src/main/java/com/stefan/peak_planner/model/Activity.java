@@ -19,20 +19,25 @@ public class Activity {
     @Column(name = "id")
     private int id;
 
-    @Column(name = "name")
-    @Size(max = 45, message = "The name of the activity should be at most 45 characters")
+    @Column(name = "title")
+    @Size(max = 45, message = "The title of the activity should be at most 45 characters")
     private String name;
+
+    @Column(name = "description")
+    @Size(max = 400, message = "Description is too long (max. 400 characters)")
+    private String description;
 
     @Column(name = "start_time")
     private LocalTime startTime;
 
-    @Column(name = "priority")
-    @Min(value = 1, message = "Priority must be at least 1")
-    @Max(value = 10, message = "Priority must be at most 10")
-    private byte priority;
+    @Column(name = "minutes")
+    @Max(value = 1440, message = "You cannot have that many minutes in a day")
+    private short minutes;
 
-    @OneToMany(mappedBy = "activity", cascade = CascadeType.ALL)
-    private List<ActivityStep> activitySteps = new ArrayList<>();
+    @Column(name = "impact")
+    @Min(value = 1, message = "Impact must be at least 1")
+    @Max(value = 10, message = "Impact must be at most 10")
+    private byte impact;
 
     @ManyToOne
     @JoinColumn(name = "day_of_week_id")
@@ -66,27 +71,35 @@ public class Activity {
         this.startTime = startTime;
     }
 
-    public byte getPriority() {
-        return priority;
-    }
-
-    public void setPriority(byte priority) {
-        this.priority = priority;
-    }
-
-    public List<ActivityStep> getActivitySteps() {
-        return activitySteps;
-    }
-
-    public void setActivitySteps(List<ActivityStep> activitySteps) {
-        this.activitySteps = activitySteps;
-    }
-
     public DayOfWeek getDayOfWeek() {
         return dayOfWeek;
     }
 
     public void setDayOfWeek(DayOfWeek dayOfWeek) {
         this.dayOfWeek = dayOfWeek;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public short getMinutes() {
+        return minutes;
+    }
+
+    public void setMinutes(short minutes) {
+        this.minutes = minutes;
+    }
+
+    public byte getImpact() {
+        return impact;
+    }
+
+    public void setImpact(byte impact) {
+        this.impact = impact;
     }
 }

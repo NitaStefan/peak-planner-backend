@@ -21,7 +21,7 @@ public class Goal implements UserOwned{
     private String title;
 
     @OneToMany(mappedBy = "goal", cascade = CascadeType.ALL)
-    private List<Task> tasks = new ArrayList<>();
+    private List<Step> steps = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -47,12 +47,12 @@ public class Goal implements UserOwned{
         this.title = title;
     }
 
-    public List<Task> getTasks() {
-        return tasks;
+    public List<Step> getSteps() {
+        return steps;
     }
 
-    public void setTasks(List<Task> tasks) {
-        this.tasks = tasks;
+    public void setSteps(List<Step> steps) {
+        this.steps = steps;
     }
 
     public User getUser() {

@@ -43,9 +43,9 @@ public class PlannedEventService {
         plannedEventDao.deleteById(plannedEventId);
     }
 
-    @Transactional
-    public void deleteEventDetails(List<Integer> eventDetailIds) {
-
-        for (Integer id : eventDetailIds)  eventDetailsDao.deleteById(id);
-    }
+//    @Transactional
+//    public void deleteEventDetails(List<Integer> eventDetailIds) {
+//
+//        for (Integer id : eventDetailIds)  eventDetailsDao.deleteById(id);
+//    }
 }

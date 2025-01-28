@@ -39,6 +39,11 @@ public class Activity {
     @Max(value = 10, message = "Impact must be at most 10")
     private byte impact;
 
+    // method to get the current step for population
+//    @ManyToOne
+//    @JoinColumn(name = "goal_id", nullable = true)
+//    private Goal goal;
+
     @ManyToOne
     @JoinColumn(name = "day_of_week_id")
     @JsonIgnore

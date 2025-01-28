@@ -50,18 +50,18 @@ public class PlannedEventController {
     }
 
     @DeleteMapping("/{plannedEventId}")
-    public ResponseEntity<Void> addEventDetailsToPlannedEvent(@PathVariable int plannedEventId)
+    public ResponseEntity<Void> deletePlannedEvent(@PathVariable int plannedEventId)
     {
         plannedEventService.deletePlannedEvent(plannedEventId);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-    @DeleteMapping("/event-details")
-    public ResponseEntity<Void> deleteEventDetails(@RequestBody List<Integer> eventDetailIds) {
-
-        plannedEventService.deleteEventDetails(eventDetailIds);
-
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
+//    @DeleteMapping("/event-details")
+//    public ResponseEntity<Void> deleteEventDetails(@RequestBody List<Integer> eventDetailIds) {
+//
+//        plannedEventService.deleteEventDetails(eventDetailIds);
+//
+//        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//    }
 
 }

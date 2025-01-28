@@ -1,6 +1,7 @@
 package com.stefan.peak_planner.controller;
 
 import com.stefan.peak_planner.model.FlexibleEvent;
+import com.stefan.peak_planner.model.PlannedEvent;
 import com.stefan.peak_planner.service.FlexibleEventService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,10 +28,26 @@ public class FlexibleEventsController {
     }
 
     @PostMapping
-    public ResponseEntity<FlexibleEvent> addPlannedEvent(@RequestBody FlexibleEvent flexibleEvent) {
+    public ResponseEntity<FlexibleEvent> addFlexibleEvent(@RequestBody FlexibleEvent flexibleEvent) {
 
         FlexibleEvent dbFlexibleEvent = flexibleEventService.saveFlexibleEvent(flexibleEvent);
 
         return new ResponseEntity<>(dbFlexibleEvent, HttpStatus.CREATED);
+    }
+
+    @PutMapping
+    public ResponseEntity<FlexibleEvent> updateFlexibleEvent(@RequestBody FlexibleEvent flexibleEvent) {
+
+        FlexibleEvent dbFlexibleEvent = flexibleEventService.saveFlexibleEvent(flexibleEvent);
+
+        return new ResponseEntity<>(dbFlexibleEvent, HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/{flexibleEventId}")
+    public ResponseEntity<Void> deleteFlexibleEvent(@PathVariable int flexibleEventId)
+    {
+        flexibleEventService.deleteFlexibleEvent(flexibleEventId);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

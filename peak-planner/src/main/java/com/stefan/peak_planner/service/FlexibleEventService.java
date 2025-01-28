@@ -27,4 +27,10 @@ public class FlexibleEventService {
 
         return flexibleEventDao.save(flexibleEvent);
     }
+
+    @Transactional
+    public void deleteFlexibleEvent(int flexibleEventId) {
+
+        flexibleEventDao.deleteById(flexibleEventId);
+    }
 }

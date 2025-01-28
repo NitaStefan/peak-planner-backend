@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +20,9 @@ public class Goal implements UserOwned{
     @Column(name = "title")
     @Size(max = 45, message = "The title should be at most 45 characters")
     private String title;
+
+    @Column(name = "start_date")
+    private LocalDate startDate;
 
     @OneToMany(mappedBy = "goal", cascade = CascadeType.ALL)
     private List<Step> steps = new ArrayList<>();
@@ -41,6 +45,14 @@ public class Goal implements UserOwned{
 
     public String getTitle() {
         return title;
+    }
+
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
     }
 
     public void setTitle(String title) {

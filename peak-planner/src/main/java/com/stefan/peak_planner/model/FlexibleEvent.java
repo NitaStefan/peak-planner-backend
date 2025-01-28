@@ -27,9 +27,8 @@ public class FlexibleEvent implements UserOwned {
     @Column(name = "start_date")
     private LocalDate startDate;
 
-    @Column(name = "days")
-    @Max(value = 32000, message = "You cannot have such a long duration") // 87 years
-    private short days;
+    @Column(name = "end_date")
+    private LocalDate endDate;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -71,12 +70,12 @@ public class FlexibleEvent implements UserOwned {
         this.startDate = startDate;
     }
 
-    public short getDays() {
-        return days;
+    public LocalDate getEndDate() {
+        return endDate;
     }
 
-    public void setDays(short days) {
-        this.days = days;
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
     }
 
     public User getUser() {

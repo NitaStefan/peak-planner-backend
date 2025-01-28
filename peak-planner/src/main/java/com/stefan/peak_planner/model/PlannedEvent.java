@@ -19,7 +19,7 @@ public class PlannedEvent implements UserOwned{
     @Column(name = "scheduled_date")
     private LocalDate scheduledDate;
 
-    @OneToMany(mappedBy = "plannedEvent", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "plannedEvent", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<EventDetails> eventDetails = new ArrayList<>();
 
     @ManyToOne

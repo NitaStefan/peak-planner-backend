@@ -24,12 +24,12 @@ public class Step {
     @Size(max = 400, message = "Description is too long (max. 400 characters). Try to be more concise or create a new step")
     private String description;
 
-    @Column(name = "start_date")
-    private LocalDate startDate;
-
     @Column(name = "days")
     @Max(value = 32000, message = "You cannot have such a long duration") // 87 years
     private short days;
+
+    @Column(name = "order_index")
+    private int orderIndex;
 
     @ManyToOne
     @JoinColumn(name = "goal_id")
@@ -63,13 +63,6 @@ public class Step {
         this.description = description;
     }
 
-    public LocalDate getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
-    }
 
     public short getDays() {
         return days;

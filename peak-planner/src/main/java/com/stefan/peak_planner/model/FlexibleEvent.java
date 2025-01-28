@@ -85,4 +85,12 @@ public class FlexibleEvent implements UserOwned {
     public void setUser(User user) {
         this.user = user;
     }
+
+    // exclude from being persisted
+    @Transient
+    public boolean isActive() {
+        LocalDate today = LocalDate.now();
+        return (startDate != null && endDate != null) &&
+                !today.isBefore(startDate) && !today.isAfter(endDate);
+    }
 }

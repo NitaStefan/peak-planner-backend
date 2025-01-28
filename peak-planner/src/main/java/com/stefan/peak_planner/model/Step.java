@@ -3,6 +3,7 @@ package com.stefan.peak_planner.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
@@ -29,12 +30,24 @@ public class Step {
     private short days;
 
     @Column(name = "order_index")
+    @Min(value = 0, message = "the order number cannot be negative")
     private int orderIndex;
 
     @ManyToOne
     @JoinColumn(name = "goal_id")
     @JsonIgnore
     private Goal goal;
+
+    @Override
+    public String toString() {
+        return "Step{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", days=" + days +
+                ", orderIndex=" + orderIndex +
+                '}';
+    }
 
     public Step() {
     }
@@ -70,6 +83,14 @@ public class Step {
 
     public void setDays(short days) {
         this.days = days;
+    }
+
+    public int getOrderIndex() {
+        return orderIndex;
+    }
+
+    public void setOrderIndex(int orderIndex) {
+        this.orderIndex = orderIndex;
     }
 
     public Goal getGoal() {

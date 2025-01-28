@@ -21,7 +21,7 @@ public class Activity {
 
     @Column(name = "title")
     @Size(max = 45, message = "The title of the activity should be at most 45 characters")
-    private String name;
+    private String title;
 
     @Column(name = "description")
     @Size(max = 400, message = "Description is too long (max. 400 characters)")
@@ -39,10 +39,9 @@ public class Activity {
     @Max(value = 10, message = "Impact must be at most 10")
     private byte impact;
 
-    // method to get the current step for population
-//    @ManyToOne
-//    @JoinColumn(name = "goal_id", nullable = true)
-//    private Goal goal;
+    @ManyToOne
+    @JoinColumn(name = "goal_id", nullable = true)
+    private Goal goal;
 
     @ManyToOne
     @JoinColumn(name = "day_of_week_id")
@@ -60,12 +59,17 @@ public class Activity {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+//    @Transient
+    public String getTitle() {
+//        if (goal != null) {
+//            Step currentStep = goal.getCurrentStep();
+//            return (currentStep != null) ? currentStep.getTitle() : "No Active Step";
+//        }
+        return title; // Fallback if no goal is set
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public LocalTime getStartTime() {
@@ -84,7 +88,12 @@ public class Activity {
         this.dayOfWeek = dayOfWeek;
     }
 
+//    @Transient
     public String getDescription() {
+//        if (goal != null) {
+//            Step currentStep = goal.getCurrentStep();
+//            return (currentStep != null) ? currentStep.getDescription() : "No Active Step Description";
+//        }
         return description;
     }
 
@@ -107,4 +116,13 @@ public class Activity {
     public void setImpact(byte impact) {
         this.impact = impact;
     }
+
+    public Goal getGoal() {
+        return goal;
+    }
+
+    public void setGoal(Goal goal) {
+        this.goal = goal;
+    }
+
 }

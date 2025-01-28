@@ -25,6 +25,7 @@ public class Goal implements UserOwned{
     private LocalDate startDate;
 
     @OneToMany(mappedBy = "goal", cascade = CascadeType.ALL)
+    @OrderBy("orderIndex ASC")
     private List<Step> steps = new ArrayList<>();
 
     @ManyToOne

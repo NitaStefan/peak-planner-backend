@@ -1,6 +1,7 @@
 package com.stefan.peak_planner.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -30,7 +31,7 @@ public class Step {
     private short days;
 
     @Column(name = "order_index")
-    @Min(value = 0, message = "the order number cannot be negative")
+    @Min(value = 1, message = "The minimum order is 1")
     private int orderIndex;
 
     @ManyToOne
@@ -38,18 +39,47 @@ public class Step {
     @JsonIgnore
     private Goal goal;
 
-    @Override
-    public String toString() {
-        return "Step{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", days=" + days +
-                ", orderIndex=" + orderIndex +
-                '}';
-    }
+    @Transient
+    private LocalDate endDate;
+
+    @Transient
+    private boolean isActive;
 
     public Step() {
+    }
+
+    public LocalDate getEndDate() {
+        if (endDate == null && goal != null) { // Compute only if not already set
+            LocalDate computedStartDate = goal.getStartDate();
+
+            for (Step step : goal.getSteps()) {
+                if (step.getOrderIndex() < this.orderIndex) {
+                    computedStartDate = computedStartDate.plusDays(step.getDays());
+                }
+            }
+
+            this.endDate = computedStartDate.plusDays(this.days);
+        }
+        return this.endDate;
+    }
+
+    public boolean isActive() {
+        LocalDate today = LocalDate.now();
+        LocalDate stepEndDate = getEndDate(); // Ensure end date is calculated
+
+        if (goal == null || stepEndDate == null) {
+            return false;
+        }
+
+        // Get the previous step's end date, or default to goal start date if first step
+        LocalDate previousStepEndDate = goal.getSteps().stream()
+                .filter(s -> s.getOrderIndex() == this.orderIndex - 1)
+                .map(Step::getEndDate)
+                .findFirst()
+                .orElse(goal.getStartDate());
+
+        // Current step is active only if today is strictly after the previous step's end date and before its own end date
+        return today.isAfter(previousStepEndDate) && !today.isAfter(stepEndDate);
     }
 
     public int getId() {

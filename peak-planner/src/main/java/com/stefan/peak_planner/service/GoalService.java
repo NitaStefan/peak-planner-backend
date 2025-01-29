@@ -34,6 +34,13 @@ public class GoalService {
         return goalDao.findByUser(currentUser);
     }
 
+    @Transactional
+    public void deleteGoal(int goalId) {
+
+        goalDao.deleteById(goalId);
+    }
+
+    @Transactional
     public Step addStepToGoal(int goalId, Step step) {
         Goal goal = goalDao.findById(goalId)
                 .orElseThrow(() -> new RuntimeException("Goal not found"));
@@ -47,72 +54,63 @@ public class GoalService {
             for (int i = steps.size() - 1; i >= step.getOrderIndex() - 1; i--)
                 steps.get(i).setOrderIndex(steps.get(i).getOrderIndex() + 1);
             reordered = true;
-        }
-        else step.setOrderIndex(steps.size() + 1);
+        } else step.setOrderIndex(steps.size() + 1);
 
         step.setGoal(goal);
 
-        if(reordered) stepDao.saveAll(steps);
+        if (reordered) stepDao.saveAll(steps);
         return stepDao.save(step);
     }
 
-    public void deleteGoal(int goalId) {
+    @Transactional
+    public Step updateStep(Step updatedStep) {
+        Step existingStep = stepDao.findById(updatedStep.getId())
+                .orElseThrow(() -> new RuntimeException("Step not found"));
 
-        goalDao.deleteById(goalId);
+        Goal goal = existingStep.getGoal();
+        List<Step> steps = goal.getSteps(); // Already ordered by orderIndex
+
+        int oldIndex = existingStep.getOrderIndex() - 1; // Convert to list index (0-based)
+        int newIndex = updatedStep.getOrderIndex() - 1; // Convert to list index (0-based)
+
+        if (oldIndex != newIndex) {
+            if (newIndex < oldIndex) {
+                for (int i = newIndex; i < oldIndex; i++) {
+                    steps.get(i).setOrderIndex(steps.get(i).getOrderIndex() + 1);
+                }
+            } else {
+                for (int i = oldIndex + 1; i <= newIndex; i++) {
+                    steps.get(i).setOrderIndex(steps.get(i).getOrderIndex() - 1);
+                }
+            }
+        }
+
+        updatedStep.setGoal(goal); // bcs it's not merge
+
+        // Save only the modified steps
+        stepDao.saveAll(steps.subList(Math.min(oldIndex, newIndex), Math.max(oldIndex, newIndex) + 1));
+        return stepDao.save(updatedStep);
     }
 
-//    public Step updateStep(Step updatedStep) {
-//        // Fetch the existing step using the ID from updatedStep
-//        Step existingStep = stepDao.findById(updatedStep.getId())
-//                .orElseThrow(() -> new RuntimeException("Step not found"));
-//
-//        Goal goal = existingStep.getGoal();
-//        List<Step> steps = goal.getSteps();
-//
-//        // If orderIndex has changed, reorder the steps
-//        if (updatedStep.getOrderIndex() != existingStep.getOrderIndex()) {
-//            steps.remove(existingStep);
-//
-//            // Adjust positions for the new orderIndex
-//            if (updatedStep.getOrderIndex() <= steps.size()) {
-//                for (int i = steps.size() - 1; i >= updatedStep.getOrderIndex() - 1; i--) {
-//                    steps.get(i).setOrderIndex(steps.get(i).getOrderIndex() + 1);
-//                }
-//            }
-//
-//            updatedStep.setOrderIndex(Math.min(updatedStep.getOrderIndex(), steps.size() + 1));
-//            steps.add(updatedStep.getOrderIndex() - 1, updatedStep);
-//        }
-//
-//        // Update the other fields of the step
-//        existingStep.setTitle(updatedStep.getTitle());
-//        existingStep.setDescription(updatedStep.getDescription());
-//        existingStep.setDays(updatedStep.getDays());
-//        existingStep.setOrderIndex(updatedStep.getOrderIndex());
-//
-//        // Save the reordered steps and the updated step
-//        stepDao.saveAll(steps);
-//        return stepDao.save(existingStep);
+    public void deleteStep(int stepId) {
+        Step stepToDelete = stepDao.findById(stepId)
+                .orElseThrow(() -> new RuntimeException("Step not found"));
 
-    //    public void deleteStep(int stepId) {
-//        Step stepToDelete = stepRepository.findById(stepId)
-//                .orElseThrow(() -> new RuntimeException("Step not found"));
-//
-//        Goal goal = stepToDelete.getGoal();
-//        List<Step> steps = goal.getSteps();
-//
-//        steps.remove(stepToDelete);
-//
-//        // Reorder remaining steps
-//        for (int i = 0; i < steps.size(); i++) {
-//            steps.get(i).setOrderIndex(i + 1);
-//        }
-//
-//        // Save reordered steps and delete the step
-//        stepRepository.saveAll(steps);
-//        stepRepository.delete(stepToDelete);
-//    }
+        Goal goal = stepToDelete.getGoal();
+        List<Step> steps = goal.getSteps();
+
+        steps.remove(stepToDelete);
+
+        // Reorder remaining steps
+        for (int i = 0; i < steps.size(); i++) {
+            steps.get(i).setOrderIndex(i + 1);
+        }
+
+        // Save reordered steps and delete the step
+        stepDao.saveAll(steps);
+        stepDao.delete(stepToDelete);
     }
+}
 
 
 

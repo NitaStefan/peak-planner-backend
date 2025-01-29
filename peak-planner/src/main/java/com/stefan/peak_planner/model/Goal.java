@@ -75,4 +75,11 @@ public class Goal implements UserOwned{
     public void setUser(User user) {
         this.user = user;
     }
+
+    public Step getCurrentStep() {
+        return steps.stream()
+                .filter(Step::isActive)
+                .findFirst()
+                .orElse(null);
+    }
 }

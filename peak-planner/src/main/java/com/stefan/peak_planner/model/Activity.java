@@ -61,11 +61,11 @@ public class Activity {
 
 //    @Transient
     public String getTitle() {
-//        if (goal != null) {
-//            Step currentStep = goal.getCurrentStep();
-//            return (currentStep != null) ? currentStep.getTitle() : "No Active Step";
-//        }
-        return title; // Fallback if no goal is set
+        if (goal != null) {
+            Step currentStep = goal.getCurrentStep();
+            return (currentStep != null) ? currentStep.getTitle() : "No Active Step";
+        }
+        return title;
     }
 
     public void setTitle(String title) {
@@ -90,10 +90,10 @@ public class Activity {
 
 //    @Transient
     public String getDescription() {
-//        if (goal != null) {
-//            Step currentStep = goal.getCurrentStep();
-//            return (currentStep != null) ? currentStep.getDescription() : "No Active Step Description";
-//        }
+        if (goal != null) {
+            Step currentStep = goal.getCurrentStep();
+            return (currentStep != null) ? currentStep.getDescription() : "";
+        }
         return description;
     }
 

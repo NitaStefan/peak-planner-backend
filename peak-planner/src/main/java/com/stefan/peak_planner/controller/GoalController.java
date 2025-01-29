@@ -52,17 +52,17 @@ public class GoalController {
         return new ResponseEntity<>(dbStep, HttpStatus.CREATED);
     }
 
-//    @PutMapping("/steps/{stepId}")
-//    public ResponseEntity<Step> updateStep(@RequestBody Step step) {
-//        Step dbStep = goalService.updateStep(step);
-//        return new ResponseEntity<>(dbStep, HttpStatus.OK);
-//    }
+    @PutMapping("/steps")
+    public ResponseEntity<Step> updateStep(@RequestBody Step step) {
+        Step dbStep = goalService.updateStep(step);
+        return new ResponseEntity<>(dbStep, HttpStatus.OK);
+    }
 
-//    @DeleteMapping("/steps/{stepId}")
-//    public ResponseEntity<Void> deleteStep(@PathVariable int stepId) {
-//        stepService.deleteStep(stepId);
-//        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//    }
+    @DeleteMapping("/steps/{stepId}")
+    public ResponseEntity<Void> deleteStep(@PathVariable int stepId) {
+        goalService.deleteStep(stepId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 
 }
 

@@ -3,6 +3,7 @@ package com.stefan.peak_planner.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +18,7 @@ public class PlannedEvent implements UserOwned{
     private int id;
 
     @Column(name = "scheduled_date")
-    private LocalDate scheduledDate;
+    private Instant scheduledDate;
 
     @OneToMany(mappedBy = "plannedEvent", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<EventDetails> eventDetails = new ArrayList<>();
@@ -38,11 +39,11 @@ public class PlannedEvent implements UserOwned{
         this.id = id;
     }
 
-    public LocalDate getScheduledDate() {
+    public Instant getScheduledDate() {
         return scheduledDate;
     }
 
-    public void setScheduledDate(LocalDate scheduledDate) {
+    public void setScheduledDate(Instant scheduledDate) {
         this.scheduledDate = scheduledDate;
     }
 

@@ -1,7 +1,6 @@
 package com.stefan.peak_planner.controller;
 
 import com.stefan.peak_planner.model.FlexibleEvent;
-import com.stefan.peak_planner.model.PlannedEvent;
 import com.stefan.peak_planner.service.FlexibleEventService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,6 +36,8 @@ public class FlexibleEventsController {
 
     @PutMapping
     public ResponseEntity<FlexibleEvent> updateFlexibleEvent(@RequestBody FlexibleEvent flexibleEvent) {
+
+        System.out.println(flexibleEvent.getStartDate());
 
         FlexibleEvent dbFlexibleEvent = flexibleEventService.saveFlexibleEvent(flexibleEvent);
 

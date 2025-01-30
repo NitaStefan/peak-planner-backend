@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Size;
 
+import java.time.Instant;
 import java.time.LocalTime;
 
 @Entity

@@ -1,11 +1,12 @@
 package com.stefan.peak_planner.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Size;
 
-import java.time.LocalDate;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
 @Entity
 @Table(name = "flexible_event")
@@ -25,10 +26,10 @@ public class FlexibleEvent implements UserOwned {
     private String description;
 
     @Column(name = "start_date")
-    private LocalDate startDate;
+    private Instant startDate;
 
     @Column(name = "end_date")
-    private LocalDate endDate;
+    private Instant endDate;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -62,19 +63,19 @@ public class FlexibleEvent implements UserOwned {
         this.description = description;
     }
 
-    public LocalDate getStartDate() {
+    public Instant getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(LocalDate startDate) {
+    public void setStartDate(Instant startDate) {
         this.startDate = startDate;
     }
 
-    public LocalDate getEndDate() {
+    public Instant getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(LocalDate endDate) {
+    public void setEndDate(Instant endDate) {
         this.endDate = endDate;
     }
 
@@ -87,10 +88,11 @@ public class FlexibleEvent implements UserOwned {
     }
 
     // exclude from being persisted
-    @Transient
+    @JsonProperty("isActive")
     public boolean isActive() {
-        LocalDate today = LocalDate.now();
+        Instant now = Instant.now();
         return (startDate != null && endDate != null) &&
-                !today.isBefore(startDate) && !today.isAfter(endDate);
+                !now.isBefore(startDate) && !now.isAfter(endDate.plus(1, ChronoUnit.DAYS));
     }
+
 }

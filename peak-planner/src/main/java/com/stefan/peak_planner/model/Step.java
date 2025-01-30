@@ -42,9 +42,6 @@ public class Step {
     @Transient
     private LocalDate endDate;
 
-    @Transient
-    private boolean isActive;
-
     public Step() {
     }
 
@@ -63,6 +60,7 @@ public class Step {
         return this.endDate;
     }
 
+    @JsonProperty("isActive")
     public boolean isActive() {
         LocalDate today = LocalDate.now();
         LocalDate stepEndDate = getEndDate(); // Ensure end date is calculated

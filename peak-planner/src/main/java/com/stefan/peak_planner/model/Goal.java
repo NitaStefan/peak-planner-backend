@@ -1,9 +1,11 @@
 package com.stefan.peak_planner.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +24,7 @@ public class Goal implements UserOwned{
     private String title;
 
     @Column(name = "start_date")
-    private LocalDate startDate;
+    private Instant startDate;
 
     @OneToMany(mappedBy = "goal", cascade = CascadeType.ALL)
     @OrderBy("orderIndex ASC")
@@ -48,11 +50,11 @@ public class Goal implements UserOwned{
         return title;
     }
 
-    public LocalDate getStartDate() {
+    public Instant getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(LocalDate startDate) {
+    public void setStartDate(Instant startDate) {
         this.startDate = startDate;
     }
 
@@ -76,6 +78,7 @@ public class Goal implements UserOwned{
         this.user = user;
     }
 
+    @JsonIgnore
     public Step getCurrentStep() {
         return steps.stream()
                 .filter(Step::isActive)

@@ -5,6 +5,7 @@ import com.stefan.peak_planner.dao.StepDao;
 import com.stefan.peak_planner.model.Goal;
 import com.stefan.peak_planner.model.Step;
 import com.stefan.peak_planner.model.User;
+import com.stefan.peak_planner.projection.GoalProjection;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,15 +24,20 @@ public class GoalService {
         this.stepDao = stepDao;
     }
 
+    public List<GoalProjection> getGoals(User currentUser) {
+
+        return goalDao.findByUser(currentUser);
+    }
+
+    public List<Step> findStepsByGoalId(int id) {
+
+        return stepDao.findStepsByGoalId(id);
+    }
+
     @Transactional
     public Goal saveGoal(Goal goal) {
 
         return goalDao.save(goal);
-    }
-
-    public List<Goal> getGoals(User currentUser) {
-
-        return goalDao.findByUser(currentUser);
     }
 
     @Transactional
@@ -92,6 +98,7 @@ public class GoalService {
         return stepDao.save(updatedStep);
     }
 
+    @Transactional
     public void deleteStep(int stepId) {
         Step stepToDelete = stepDao.findById(stepId)
                 .orElseThrow(() -> new RuntimeException("Step not found"));

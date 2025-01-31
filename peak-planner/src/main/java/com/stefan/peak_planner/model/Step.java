@@ -7,7 +7,9 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
 
-import java.time.LocalDate;
+import java.time.Instant;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 
 @Entity
 @Table(name = "step")
@@ -40,14 +42,15 @@ public class Step {
     private Goal goal;
 
     @Transient
-    private LocalDate endDate;
+    private Instant endDate;
 
     public Step() {
     }
 
-    public LocalDate getEndDate() {
+    public Instant getEndDate() {
         if (endDate == null && goal != null) { // Compute only if not already set
-            LocalDate computedStartDate = goal.getStartDate();
+            Instant computedStartInstant = goal.getStartDate();
+            ZonedDateTime computedStartDate = computedStartInstant.atZone(ZoneOffset.UTC);
 
             for (Step step : goal.getSteps()) {
                 if (step.getOrderIndex() < this.orderIndex) {
@@ -55,29 +58,35 @@ public class Step {
                 }
             }
 
-            this.endDate = computedStartDate.plusDays(this.days);
+            this.endDate = computedStartDate.plusDays(this.days).toInstant();
         }
         return this.endDate;
     }
 
     @JsonProperty("isActive")
     public boolean isActive() {
-        LocalDate today = LocalDate.now();
-        LocalDate stepEndDate = getEndDate(); // Ensure end date is calculated
+        Instant nowInstant = Instant.now();
+        ZonedDateTime today = nowInstant.atZone(ZoneOffset.UTC).toLocalDate().atStartOfDay(ZoneOffset.UTC);
 
-        if (goal == null || stepEndDate == null) {
+        Instant stepEndInstant = getEndDate();
+
+        if (goal == null || stepEndInstant == null) {
             return false;
         }
 
+        ZonedDateTime stepEndDate = stepEndInstant.atZone(ZoneOffset.UTC).toLocalDate().atStartOfDay(ZoneOffset.UTC);
+
         // Get the previous step's end date, or default to goal start date if first step
-        LocalDate previousStepEndDate = goal.getSteps().stream()
+        Instant previousStepEndInstant = goal.getSteps().stream()
                 .filter(s -> s.getOrderIndex() == this.orderIndex - 1)
                 .map(Step::getEndDate)
                 .findFirst()
                 .orElse(goal.getStartDate());
 
+        ZonedDateTime previousStepEndDate = previousStepEndInstant.atZone(ZoneOffset.UTC).toLocalDate().atStartOfDay(ZoneOffset.UTC);
+
         // Current step is active only if today is strictly after the previous step's end date and before its own end date
-        return today.isAfter(previousStepEndDate) && !today.isAfter(stepEndDate);
+        return today.isAfter(previousStepEndDate) && today.isBefore(stepEndDate);
     }
 
     public int getId() {

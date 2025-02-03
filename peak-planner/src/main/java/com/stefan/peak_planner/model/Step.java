@@ -10,6 +10,7 @@ import jakarta.validation.constraints.Size;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 
 @Entity
 @Table(name = "step")
@@ -87,6 +88,22 @@ public class Step {
 
         // Current step is active only if today is strictly after the previous step's end date and before its own end date
         return today.isAfter(previousStepEndDate) && today.isBefore(stepEndDate);
+    }
+
+    @JsonProperty("progress")
+    public int getProgress() {
+        Instant now = Instant.now();
+
+        boolean isGoalStarted = goal.getStartDate().isBefore(now);
+        if (!isGoalStarted) return 0;
+
+        if (isActive()) {
+            long totalDays = days;
+            long elapsedDays = ChronoUnit.DAYS.between(getEndDate().minus(days, ChronoUnit.DAYS), now);
+            return (int) Math.min(100, (elapsedDays * 100) / totalDays);
+        }
+
+        return getEndDate().isBefore(now) ? 100 : 0;
     }
 
     public int getId() {

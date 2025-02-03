@@ -2,6 +2,7 @@ package com.stefan.peak_planner.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 
@@ -28,6 +29,7 @@ public class Goal implements UserOwned{
 
     @OneToMany(mappedBy = "goal", cascade = CascadeType.ALL)
     @OrderBy("orderIndex ASC")
+    @JsonIgnore
     private List<Step> steps = new ArrayList<>();
 
     @ManyToOne
@@ -36,6 +38,11 @@ public class Goal implements UserOwned{
     private User user;
 
     public Goal() {
+    }
+
+    @JsonProperty("numberOfSteps")
+    public int getNumberOfSteps() {
+        return steps.size();
     }
 
     public int getId() {

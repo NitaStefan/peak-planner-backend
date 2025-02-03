@@ -2,8 +2,6 @@ package com.stefan.peak_planner.controller;
 
 import com.stefan.peak_planner.model.Goal;
 import com.stefan.peak_planner.model.Step;
-import com.stefan.peak_planner.model.UserOwned;
-import com.stefan.peak_planner.projection.GoalProjection;
 import com.stefan.peak_planner.service.GoalService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,8 +20,8 @@ public class GoalController {
     }
 
     @GetMapping
-    public ResponseEntity<List<GoalProjection>> getGoals() {
-        List<GoalProjection> goals = goalService.getGoals(null);
+    public ResponseEntity<List<Goal>> getGoals() {
+        List<Goal> goals = goalService.getGoals(null);
         return new ResponseEntity<>(goals, HttpStatus.OK);
     }
 

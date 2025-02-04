@@ -66,28 +66,24 @@ public class Step {
 
     @JsonProperty("isActive")
     public boolean isActive() {
-        Instant nowInstant = Instant.now();
-        ZonedDateTime today = nowInstant.atZone(ZoneOffset.UTC).toLocalDate().atStartOfDay(ZoneOffset.UTC);
-
-        Instant stepEndInstant = getEndDate();
-
-        if (goal == null || stepEndInstant == null) {
-            return false;
-        }
-
-        ZonedDateTime stepEndDate = stepEndInstant.atZone(ZoneOffset.UTC).toLocalDate().atStartOfDay(ZoneOffset.UTC);
+        Instant now = Instant.now();
 
         // Get the previous step's end date, or default to goal start date if first step
+        // last day is fully included
         Instant previousStepEndInstant = goal.getSteps().stream()
                 .filter(s -> s.getOrderIndex() == this.orderIndex - 1)
                 .map(Step::getEndDate)
                 .findFirst()
-                .orElse(goal.getStartDate());
+                .orElse(goal.getStartDate())
+                .plus(1, ChronoUnit.DAYS);
 
-        ZonedDateTime previousStepEndDate = previousStepEndInstant.atZone(ZoneOffset.UTC).toLocalDate().atStartOfDay(ZoneOffset.UTC);
+        Instant stepEndInstant = getEndDate().plus(1, ChronoUnit.DAYS);
 
-        // Current step is active only if today is strictly after the previous step's end date and before its own end date
-        return today.isAfter(previousStepEndDate) && today.isBefore(stepEndDate);
+        System.out.println(previousStepEndInstant);
+        System.out.println(getEndDate());
+        System.out.println("________________________");
+
+        return now.isAfter(previousStepEndInstant) && now.isBefore(stepEndInstant);
     }
 
     @JsonProperty("progress")

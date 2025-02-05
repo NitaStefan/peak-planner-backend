@@ -1,4 +1,4 @@
-package com.stefan.peak_planner.model;
+package com.stefan.peak_planner.dto;
 
 public class ErrorResponse {
     private final int status;

@@ -1,4 +1,4 @@
-package com.stefan.peak_planner.model;
+package com.stefan.peak_planner.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

@@ -90,10 +90,11 @@ public class GoalService {
             }
         }
 
-        updatedStep.setGoal(goal); // bcs it's not merge
+        updatedStep.setGoal(goal);
 
         // Save only the modified steps
         stepDao.saveAll(steps.subList(Math.min(oldIndex, newIndex), Math.max(oldIndex, newIndex) + 1));
+
         return stepDao.save(updatedStep);
     }
 

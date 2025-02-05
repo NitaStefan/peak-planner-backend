@@ -37,6 +37,11 @@ public class Step {
     @Min(value = 1, message = "The minimum order is 1")
     private int orderIndex;
 
+    @Column(name = "impact")
+    @Min(value = 1, message = "Impact must be at least 1")
+    @Max(value = 10, message = "Impact must be at most 10")
+    private byte impact;
+
     @ManyToOne
     @JoinColumn(name = "goal_id")
     @JsonIgnore
@@ -78,10 +83,6 @@ public class Step {
                 .plus(1, ChronoUnit.DAYS);
 
         Instant stepEndInstant = getEndDate().plus(1, ChronoUnit.DAYS);
-
-        System.out.println(previousStepEndInstant);
-        System.out.println(getEndDate());
-        System.out.println("________________________");
 
         return now.isAfter(previousStepEndInstant) && now.isBefore(stepEndInstant);
     }
@@ -141,6 +142,14 @@ public class Step {
 
     public void setOrderIndex(int orderIndex) {
         this.orderIndex = orderIndex;
+    }
+
+    public byte getImpact() {
+        return impact;
+    }
+
+    public void setImpact(byte impact) {
+        this.impact = impact;
     }
 
     public Goal getGoal() {

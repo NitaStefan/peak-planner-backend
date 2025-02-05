@@ -1,12 +1,10 @@
 package com.stefan.peak_planner.controller;
 
-import com.stefan.peak_planner.model.AuthenticationResponse;
+import com.stefan.peak_planner.dto.AuthenticationResponse;
 import com.stefan.peak_planner.model.User;
 import com.stefan.peak_planner.service.AuthService;
 import com.stefan.peak_planner.service.DayOfWeekService;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

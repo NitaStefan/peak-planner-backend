@@ -110,6 +110,10 @@ public class Activity {
     }
 
     public byte getImpact() {
+        if (goal != null) {
+            Step currentStep = goal.getCurrentStep();
+            return (currentStep != null) ? currentStep.getImpact() : 0;
+        }
         return impact;
     }
 

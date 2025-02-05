@@ -1,11 +1,13 @@
 package com.stefan.peak_planner.controller;
 
-import com.stefan.peak_planner.model.Activity;
 import com.stefan.peak_planner.model.DayOfWeek;
+import com.stefan.peak_planner.model.WeekDay;
 import com.stefan.peak_planner.service.DayOfWeekService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/days-of-week")
@@ -17,20 +19,29 @@ public class DayOfWeekController {
         this.dayOfWeekService = dayOfWeekService;
     }
 
-    @GetMapping("/{dayId}")
-    public ResponseEntity<DayOfWeek> getDayOfWeek(@PathVariable int dayId) {
+    @GetMapping("/{day}")
+    public ResponseEntity<DayOfWeek> getDayOfWeek(@PathVariable WeekDay day) {
 
-        DayOfWeek dayOfWeek = dayOfWeekService.findDayOfWeekById(dayId);
+        DayOfWeek dayOfWeek = dayOfWeekService.getDayOfWeek( null, day);
 
         return new ResponseEntity<>(dayOfWeek, HttpStatus.OK);
     }
 
-    @PostMapping("/{dayId}/activities")
-    public ResponseEntity<Activity> addActivityToDayOfWeek(@PathVariable int dayId, @RequestBody Activity activity) {
 
-        Activity dbActivity = dayOfWeekService.addActivityToDayOfWeek(dayId, activity);
+    @GetMapping
+    public ResponseEntity<List<DayOfWeek>> getDaysOfWeek() {
 
-        return new ResponseEntity<>(dbActivity, HttpStatus.CREATED);
+        List<DayOfWeek> daysOfWeek = dayOfWeekService.getDaysOfWeek( null);
+
+        return new ResponseEntity<>(daysOfWeek, HttpStatus.OK);
+    }
+
+    @PutMapping
+    public ResponseEntity<List<DayOfWeek>> saveSchedule(@RequestBody List<DayOfWeek> daysOfWeek) {
+
+        List<DayOfWeek> dbWeek = dayOfWeekService.saveAll(daysOfWeek);
+
+        return new ResponseEntity<>(dbWeek, HttpStatus.CREATED);
     }
 
 }

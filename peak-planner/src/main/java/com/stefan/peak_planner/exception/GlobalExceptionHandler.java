@@ -1,6 +1,6 @@
 package com.stefan.peak_planner.exception;
 
-import com.stefan.peak_planner.model.ErrorResponse;
+import com.stefan.peak_planner.dto.ErrorResponse;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;

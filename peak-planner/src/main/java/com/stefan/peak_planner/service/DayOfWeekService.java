@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class DayOfWeekService {
@@ -42,20 +43,19 @@ public class DayOfWeekService {
         dayOfWeekDao.saveAll(daysOfWeek);
     }
 
-    @Transactional
-    public Activity addActivityToDayOfWeek(int dayId, Activity activity) {
-
-        DayOfWeek day = dayOfWeekDao.findById(dayId)
-                .orElseThrow(() -> new ResourceNotFoundException("Day not found"));
-
-        activity.setDayOfWeek(day);
-
-        return activityDao.save(activity);
+    public DayOfWeek getDayOfWeek(User currentUser, WeekDay day) {
+        return dayOfWeekDao.findByUserAndDay(currentUser, day)
+                .orElseThrow(() -> new NoSuchElementException("Day not found for user"));
     }
 
-    public DayOfWeek findDayOfWeekById(int dayId) {
+    public List<DayOfWeek> getDaysOfWeek(User currentUser) {
 
-        return dayOfWeekDao.findById(dayId)
-                .orElseThrow(() -> new ResourceNotFoundException("Day not found"));
+        return dayOfWeekDao.findByUser(currentUser);
+    }
+
+    @Transactional
+    public List<DayOfWeek> saveAll(List<DayOfWeek> daysOfWeek) {
+
+        return dayOfWeekDao.saveAll(daysOfWeek);
     }
 }

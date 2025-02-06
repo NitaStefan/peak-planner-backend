@@ -24,7 +24,7 @@ public class DayOfWeek implements UserOwned{
     @JsonIgnore
     private User user;
 
-    @OneToMany(mappedBy = "dayOfWeek", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "dayOfWeek", cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Activity> activities = new ArrayList<>();
 
     public DayOfWeek() {

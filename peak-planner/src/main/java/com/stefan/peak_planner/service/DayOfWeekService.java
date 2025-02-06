@@ -2,6 +2,7 @@ package com.stefan.peak_planner.service;
 
 import com.stefan.peak_planner.dao.ActivityDao;
 import com.stefan.peak_planner.dao.DayOfWeekDao;
+import com.stefan.peak_planner.dao.GoalDao;
 import com.stefan.peak_planner.exception.ResourceNotFoundException;
 import com.stefan.peak_planner.model.Activity;
 import com.stefan.peak_planner.model.DayOfWeek;
@@ -21,9 +22,12 @@ public class DayOfWeekService {
 
     private final ActivityDao activityDao;
 
-    public DayOfWeekService(DayOfWeekDao dayOfWeekDao, ActivityDao activityDao) {
+    private final GoalDao goalDao;
+
+    public DayOfWeekService(DayOfWeekDao dayOfWeekDao, ActivityDao activityDao, GoalDao goalDao) {
         this.dayOfWeekDao = dayOfWeekDao;
         this.activityDao = activityDao;
+        this.goalDao = goalDao;
     }
 
     @Transactional
@@ -55,6 +59,14 @@ public class DayOfWeekService {
 
     @Transactional
     public List<DayOfWeek> saveAll(List<DayOfWeek> daysOfWeek) {
+
+        for (DayOfWeek dayOfWeek : daysOfWeek)
+            dayOfWeek.getActivities().forEach(activity -> {
+                activity.setDayOfWeek(dayOfWeek);
+                if (activity.getGoalId() > 0) activity.setGoal(goalDao.findById(activity.getGoalId())
+                        .orElseThrow(() -> new ResourceNotFoundException("Goal not found with ID: " + activity.getGoalId())));
+
+            });
 
         return dayOfWeekDao.saveAll(daysOfWeek);
     }

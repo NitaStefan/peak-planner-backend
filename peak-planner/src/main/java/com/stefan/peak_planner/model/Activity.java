@@ -1,12 +1,18 @@
 package com.stefan.peak_planner.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
 
+import java.time.Instant;
 import java.time.LocalTime;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +34,7 @@ public class Activity {
     private String description;
 
     @Column(name = "start_time")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
     private LocalTime startTime;
 
     @Column(name = "minutes")
@@ -41,7 +48,12 @@ public class Activity {
 
     @ManyToOne
     @JoinColumn(name = "goal_id", nullable = true)
+    @JsonIgnore
     private Goal goal;
+
+    @Transient
+    @JsonProperty(value = "goalId", access = JsonProperty.Access.WRITE_ONLY)
+    private int goalId;
 
     @ManyToOne
     @JoinColumn(name = "day_of_week_id")
@@ -49,6 +61,46 @@ public class Activity {
     private DayOfWeek dayOfWeek;
 
     public Activity() {
+        this.impact = 1;
+    }
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
+    public LocalTime getEndTime() {
+
+        return startTime.plusMinutes(minutes);
+    }
+
+    @JsonProperty("isActive")
+    public boolean isActive() {
+        if (startTime == null) {
+            return false;
+        }
+
+        // Get current UTC time
+        Instant now = Instant.now();
+        ZonedDateTime utcNow = now.atZone(ZoneOffset.UTC);
+
+        // Convert start and end times to UTC ZonedDateTime for today
+        ZonedDateTime startUtc = utcNow.with(startTime);
+        ZonedDateTime endUtc = utcNow.with(getEndTime());
+
+        // Check if current time is within the interval
+        return !utcNow.isBefore(startUtc) && utcNow.isBefore(endUtc);
+    }
+
+    @Transient
+    @JsonProperty("goalTitle") // ✅ This will be included in JSON only if not null
+    @JsonInclude(JsonInclude.Include.NON_NULL) // ✅ Exclude null values
+    public String getGoalTitle() {
+        return (goal != null) ? goal.getTitle() : null; // ✅ Return goal's title or null
+    }
+
+    public int getGoalId() {
+        return goalId;
+    }
+
+    public void setGoalId(int goalId) {
+        this.goalId = goalId;
     }
 
     public int getId() {
@@ -59,7 +111,7 @@ public class Activity {
         this.id = id;
     }
 
-//    @Transient
+    //    @Transient
     public String getTitle() {
         if (goal != null) {
             Step currentStep = goal.getCurrentStep();
@@ -88,7 +140,7 @@ public class Activity {
         this.dayOfWeek = dayOfWeek;
     }
 
-//    @Transient
+    //    @Transient
     public String getDescription() {
         if (goal != null) {
             Step currentStep = goal.getCurrentStep();
@@ -112,7 +164,7 @@ public class Activity {
     public byte getImpact() {
         if (goal != null) {
             Step currentStep = goal.getCurrentStep();
-            return (currentStep != null) ? currentStep.getImpact() : 0;
+            return (currentStep != null) ? currentStep.getImpact() : 1;
         }
         return impact;
     }

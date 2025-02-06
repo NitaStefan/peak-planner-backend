@@ -1,5 +1,6 @@
 package com.stefan.peak_planner.controller;
 
+import com.stefan.peak_planner.model.Activity;
 import com.stefan.peak_planner.model.DayOfWeek;
 import com.stefan.peak_planner.model.WeekDay;
 import com.stefan.peak_planner.service.DayOfWeekService;
@@ -20,11 +21,11 @@ public class DayOfWeekController {
     }
 
     @GetMapping("/{day}")
-    public ResponseEntity<DayOfWeek> getDayOfWeek(@PathVariable WeekDay day) {
+    public ResponseEntity<List<Activity>> getDayOfWeekActivities(@PathVariable WeekDay day) {
 
         DayOfWeek dayOfWeek = dayOfWeekService.getDayOfWeek( null, day);
 
-        return new ResponseEntity<>(dayOfWeek, HttpStatus.OK);
+        return new ResponseEntity<>(dayOfWeek.getActivities(), HttpStatus.OK);
     }
 
 

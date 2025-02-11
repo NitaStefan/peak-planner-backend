@@ -2,6 +2,7 @@ package com.stefan.peak_planner.service;
 
 import com.stefan.peak_planner.dao.GoalDao;
 import com.stefan.peak_planner.dao.StepDao;
+import com.stefan.peak_planner.dto.GoalWithCurrentStepDTO;
 import com.stefan.peak_planner.model.Goal;
 import com.stefan.peak_planner.model.Step;
 import com.stefan.peak_planner.model.User;
@@ -116,6 +117,15 @@ public class GoalService {
         // Save reordered steps and delete the step
         stepDao.saveAll(steps);
         stepDao.delete(stepToDelete);
+    }
+
+    public List<GoalWithCurrentStepDTO> getGoalsWithCurrentStep() {
+
+        List<Goal> goals = goalDao.findAll();
+
+        return goals.stream()
+                .map(GoalWithCurrentStepDTO::new)
+                .toList();
     }
 }
 

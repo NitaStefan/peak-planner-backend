@@ -1,5 +1,6 @@
 package com.stefan.peak_planner.controller;
 
+import com.stefan.peak_planner.dto.GoalWithCurrentStepDTO;
 import com.stefan.peak_planner.model.Goal;
 import com.stefan.peak_planner.model.Step;
 import com.stefan.peak_planner.service.GoalService;
@@ -26,9 +27,15 @@ public class GoalController {
     }
 
     @GetMapping("/{id}/steps")
-    public List<Step> getStepsByGoalId(@PathVariable int id) {
+    public ResponseEntity<List<Step>> getStepsByGoalId(@PathVariable int id) {
 
-        return goalService.findStepsByGoalId(id);
+        return new ResponseEntity<>(goalService.findStepsByGoalId(id), HttpStatus.OK);
+    }
+
+    @GetMapping("/with-current-step")
+    public ResponseEntity<List<GoalWithCurrentStepDTO>> getGoalsWithCurrentStep() {
+
+        return new ResponseEntity<>(goalService.getGoalsWithCurrentStep(), HttpStatus.OK);
     }
 
     @PostMapping

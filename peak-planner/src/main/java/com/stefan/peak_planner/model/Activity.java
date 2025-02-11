@@ -89,10 +89,10 @@ public class Activity {
     }
 
     @Transient
-    @JsonProperty("goalTitle") // ✅ This will be included in JSON only if not null
-    @JsonInclude(JsonInclude.Include.NON_NULL) // ✅ Exclude null values
+    @JsonProperty("goalTitle")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public String getGoalTitle() {
-        return (goal != null) ? goal.getTitle() : null; // ✅ Return goal's title or null
+        return (goal != null) ? goal.getTitle() : null;
     }
 
     public int getGoalId() {
@@ -111,7 +111,6 @@ public class Activity {
         this.id = id;
     }
 
-    //    @Transient
     public String getTitle() {
         if (goal != null) {
             Step currentStep = goal.getCurrentStep();
@@ -161,10 +160,11 @@ public class Activity {
         this.minutes = minutes;
     }
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public byte getImpact() {
         if (goal != null) {
             Step currentStep = goal.getCurrentStep();
-            return (currentStep != null) ? currentStep.getImpact() : 1;
+            return (currentStep != null) ? currentStep.getImpact() : 0;
         }
         return impact;
     }

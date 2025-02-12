@@ -63,8 +63,8 @@ public class DayOfWeekService {
         for (DayOfWeek dayOfWeek : daysOfWeek)
             dayOfWeek.getActivities().forEach(activity -> {
                 activity.setDayOfWeek(dayOfWeek);
-                if (activity.getGoalId() > 0) activity.setGoal(goalDao.findById(activity.getGoalId())
-                        .orElseThrow(() -> new ResourceNotFoundException("Goal not found with ID: " + activity.getGoalId())));
+                if (activity.getRequestGoalId() > 0) activity.setGoal(goalDao.findById(activity.getRequestGoalId())
+                        .orElseThrow(() -> new ResourceNotFoundException("Goal not found with ID: " + activity.getRequestGoalId())));
 
             });
 

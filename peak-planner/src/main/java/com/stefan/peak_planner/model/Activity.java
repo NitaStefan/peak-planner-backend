@@ -95,8 +95,16 @@ public class Activity {
         return (goal != null) ? goal.getTitle() : null;
     }
 
-    public int getGoalId() {
+    @JsonIgnore
+    public int getRequestGoalId() {
         return goalId;
+    }
+
+    @Transient
+    @JsonProperty("goalId")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public Integer getRealGoalId() {
+        return (goal != null) ? goal.getId() : null;
     }
 
     public void setGoalId(int goalId) {

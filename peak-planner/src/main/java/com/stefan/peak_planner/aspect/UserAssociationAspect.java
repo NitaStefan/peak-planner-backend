@@ -54,7 +54,8 @@ public class UserAssociationAspect {
 
     }
 
-    @Around("execution(* com.stefan.peak_planner.service.*.get*(com.stefan.peak_planner.model.User, ..))")
+    @Around("execution(* com.stefan.peak_planner.service.*.get*(com.stefan.peak_planner.model.User, ..)) || " +
+            "execution(* com.stefan.peak_planner.service.*.updateSchedule(com.stefan.peak_planner.model.User, ..))")
     public Object injectTheUserForEntityRetrieval(ProceedingJoinPoint joinPoint) throws Throwable {
 
         User user = authService.extractUserFromRequest(getCurrentHttpRequest());

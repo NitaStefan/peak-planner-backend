@@ -1,5 +1,6 @@
 package com.stefan.peak_planner.controller;
 
+import com.stefan.peak_planner.dto.ScheduleUpdateRequest;
 import com.stefan.peak_planner.model.Activity;
 import com.stefan.peak_planner.model.DayOfWeek;
 import com.stefan.peak_planner.model.WeekDay;
@@ -23,7 +24,7 @@ public class DayOfWeekController {
     @GetMapping("/{day}")
     public ResponseEntity<List<Activity>> getDayOfWeekActivities(@PathVariable WeekDay day) {
 
-        DayOfWeek dayOfWeek = dayOfWeekService.getDayOfWeek( null, day);
+        DayOfWeek dayOfWeek = dayOfWeekService.getDayOfWeek(null, day);
 
         return new ResponseEntity<>(dayOfWeek.getActivities(), HttpStatus.OK);
     }
@@ -32,15 +33,15 @@ public class DayOfWeekController {
     @GetMapping
     public ResponseEntity<List<DayOfWeek>> getDaysOfWeek() {
 
-        List<DayOfWeek> daysOfWeek = dayOfWeekService.getDaysOfWeek( null);
+        List<DayOfWeek> daysOfWeek = dayOfWeekService.getDaysOfWeek(null);
 
         return new ResponseEntity<>(daysOfWeek, HttpStatus.OK);
     }
 
     @PutMapping
-    public ResponseEntity<List<DayOfWeek>> saveSchedule(@RequestBody List<DayOfWeek> daysOfWeek) {
+    public ResponseEntity<List<DayOfWeek>> saveSchedule(@RequestBody ScheduleUpdateRequest scheduleUpdateRequest) {
 
-        List<DayOfWeek> dbWeek = dayOfWeekService.saveAll(daysOfWeek);
+        List<DayOfWeek> dbWeek = dayOfWeekService.updateSchedule(null, scheduleUpdateRequest);
 
         return new ResponseEntity<>(dbWeek, HttpStatus.CREATED);
     }

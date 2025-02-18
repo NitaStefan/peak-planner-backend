@@ -79,7 +79,7 @@ public class Step {
                 .filter(s -> s.getOrderIndex() == this.orderIndex - 1)
                 .map(Step::getEndDate)
                 .findFirst()
-                .orElse(goal.getStartDate())
+                .orElse(goal.getStartDate().minus(1, ChronoUnit.DAYS))
                 .plus(1, ChronoUnit.DAYS);
 
         Instant stepEndInstant = getEndDate().plus(1, ChronoUnit.DAYS);

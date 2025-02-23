@@ -1,6 +1,7 @@
 package com.example.pk_pl.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
@@ -27,6 +28,7 @@ public class Step {
 
     @Column(name = "description")
     @Size(max = 400, message = "Description is too long (max. 400 characters). Try to be more concise or create a new step")
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private String description;
 
     @Column(name = "days")

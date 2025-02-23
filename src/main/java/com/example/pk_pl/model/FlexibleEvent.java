@@ -1,6 +1,7 @@
 package com.example.pk_pl.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
@@ -23,6 +24,7 @@ public class FlexibleEvent implements UserOwned {
 
     @Column(name = "description")
     @Size(max = 400, message = "Description is too long (max. 400 characters)")
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private String description;
 
     @Column(name = "start_date")

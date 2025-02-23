@@ -26,6 +26,7 @@ public class EventDetails {
 
     @Column(name = "description")
     @Size(max = 400, message = "Description is too long (max. 400 characters)")
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private String description;
 
     @Column(name = "start_time")

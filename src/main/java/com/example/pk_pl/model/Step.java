@@ -9,6 +9,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
@@ -50,60 +51,63 @@ public class Step {
     private Goal goal;
 
     @Transient
-    private Instant endDate;
+    private LocalDateTime endDate;
 
     public Step() {
     }
 
-    public Instant getEndDate() {
-        if (endDate == null && goal != null) { // Compute only if not already set
-            Instant computedStartInstant = goal.getStartDate();
-            ZonedDateTime computedStartDate = computedStartInstant.atZone(ZoneOffset.UTC);
 
-            for (Step step : goal.getSteps()) {
-                if (step.getOrderIndex() < this.orderIndex) {
+    public LocalDateTime getEndDate() {
+        if (endDate == null && goal != null) {
+            LocalDateTime computedStartDate = goal.getStartDate();
+
+            for (Step step : goal.getSteps())
+                if (step.getOrderIndex() < this.orderIndex)
                     computedStartDate = computedStartDate.plusDays(step.getDays());
-                }
-            }
 
-            this.endDate = computedStartDate.plusDays(this.days).toInstant();
+            this.endDate = computedStartDate.plusDays(this.days);
         }
         return this.endDate;
     }
 
     @JsonProperty("isActive")
     public boolean isActive() {
-        Instant now = Instant.now();
+        LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
 
-        // Get the previous step's end date, or default to goal start date if first step
-        // last day is fully included
-        Instant previousStepEndInstant = goal.getSteps().stream()
+        // Get the previous step's end date, or default to goal start date minus 1 day
+        LocalDateTime previousStepEnd = goal.getSteps().stream()
                 .filter(s -> s.getOrderIndex() == this.orderIndex - 1)
                 .map(Step::getEndDate)
                 .findFirst()
-                .orElse(goal.getStartDate().minus(1, ChronoUnit.DAYS))
-                .plus(1, ChronoUnit.DAYS);
+                .orElse(goal.getStartDate().minusDays(1))
+                .plusDays(1); // fully include the previous step's last day
 
-        Instant stepEndInstant = getEndDate().plus(1, ChronoUnit.DAYS);
+        LocalDateTime stepEnd = getEndDate().plusDays(1); // include this step's last day
 
-        return now.isAfter(previousStepEndInstant) && now.isBefore(stepEndInstant);
+        return now.isAfter(previousStepEnd) && now.isBefore(stepEnd);
     }
+
 
     @JsonProperty("progress")
     public int getProgress() {
-        Instant now = Instant.now();
+        LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
 
         boolean isGoalStarted = goal.getStartDate().isBefore(now);
         if (!isGoalStarted) return 0;
 
         if (isActive()) {
             long totalDays = days;
-            long elapsedDays = ChronoUnit.DAYS.between(getEndDate().minus(days, ChronoUnit.DAYS), now);
+
+            // Start of this step = end date minus step duration
+            LocalDateTime stepStartDate = getEndDate().minusDays(days);
+            long elapsedDays = ChronoUnit.DAYS.between(stepStartDate, now);
+
             return (int) Math.min(100, (elapsedDays * 100) / totalDays);
         }
 
         return getEndDate().isBefore(now) ? 100 : 0;
     }
+
 
     public int getId() {
         return id;

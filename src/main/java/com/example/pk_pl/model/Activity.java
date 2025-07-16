@@ -9,10 +9,7 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
 
-import java.time.Instant;
-import java.time.LocalTime;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
+import java.time.*;
 
 @Entity
 @Table(name = "activity")
@@ -33,8 +30,7 @@ public class Activity {
     private String description;
 
     @Column(name = "start_time")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
-    private LocalTime startTime;
+    private LocalDateTime startTime;
 
     @Column(name = "minutes")
     @Max(value = 1440, message = "You cannot have that many minutes in a day")
@@ -63,8 +59,7 @@ public class Activity {
         this.impact = 1;
     }
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
-    public LocalTime getEndTime() {
+    public LocalDateTime getEndTime() {
 
         return startTime.plusMinutes(minutes);
     }
@@ -130,11 +125,11 @@ public class Activity {
         this.title = title;
     }
 
-    public LocalTime getStartTime() {
+    public LocalDateTime getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(LocalTime startTime) {
+    public void setStartTime(LocalDateTime startTime) {
         this.startTime = startTime;
     }
 

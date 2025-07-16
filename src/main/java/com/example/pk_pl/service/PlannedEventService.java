@@ -9,6 +9,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
@@ -30,7 +32,7 @@ public class PlannedEventService {
 //    }
 
     public List<PlannedEvent> getUpcomingPlannedEvents(User currentUser) {
-        Instant theDayBefore = Instant.now().minus(1, ChronoUnit.DAYS); // include today
+        LocalDateTime theDayBefore = LocalDateTime.now(ZoneOffset.UTC).minusDays(1);// include today
 
         System.out.println(currentUser.getUsername());
 
@@ -38,7 +40,7 @@ public class PlannedEventService {
     }
 
     public List<PlannedEvent> getPastPlannedEvents(User currentUser) {
-        Instant theDayBefore = Instant.now().minus(1, ChronoUnit.DAYS);
+        LocalDateTime theDayBefore = LocalDateTime.now(ZoneOffset.UTC).minusDays(1);// include today
 
         return plannedEventDao.findByUserAndScheduledDateBeforeOrderByScheduledDateDesc(currentUser, theDayBefore);
     }

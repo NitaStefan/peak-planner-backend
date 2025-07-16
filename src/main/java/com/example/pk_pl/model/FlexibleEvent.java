@@ -7,6 +7,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 
 @Entity
@@ -28,10 +30,10 @@ public class FlexibleEvent implements UserOwned {
     private String description;
 
     @Column(name = "start_date")
-    private Instant startDate;
+    private LocalDateTime startDate;
 
     @Column(name = "end_date")
-    private Instant endDate;
+    private LocalDateTime endDate;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -65,19 +67,19 @@ public class FlexibleEvent implements UserOwned {
         this.description = description;
     }
 
-    public Instant getStartDate() {
+    public LocalDateTime getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Instant startDate) {
+    public void setStartDate(LocalDateTime startDate) {
         this.startDate = startDate;
     }
 
-    public Instant getEndDate() {
+    public LocalDateTime getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Instant endDate) {
+    public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
     }
 
@@ -92,9 +94,10 @@ public class FlexibleEvent implements UserOwned {
     // exclude from being persisted
     @JsonProperty("isActive")
     public boolean isActive() {
-        Instant now = Instant.now();
+        LocalDateTime now = LocalDateTime.now(ZoneOffset.UTC);
         return (startDate != null && endDate != null) &&
-                !now.isBefore(startDate) && !now.isAfter(endDate.plus(1, ChronoUnit.DAYS));
+                !now.isBefore(startDate) && !now.isAfter(endDate.plusDays(1));
     }
+
 
 }

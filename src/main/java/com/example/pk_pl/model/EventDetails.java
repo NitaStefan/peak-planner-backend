@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Size;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Entity
@@ -30,8 +31,7 @@ public class EventDetails {
     private String description;
 
     @Column(name = "start_time")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
-    private LocalTime startTime;
+    private LocalDateTime startTime;
 
     @Column(name = "minutes")
     @Max(value = 1440, message = "You cannot have that many minutes in a day")
@@ -69,11 +69,11 @@ public class EventDetails {
         this.description = description;
     }
 
-    public LocalTime getStartTime() {
+    public LocalDateTime getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(LocalTime startTime) {
+    public void setStartTime(LocalDateTime startTime) {
         this.startTime = startTime;
     }
 

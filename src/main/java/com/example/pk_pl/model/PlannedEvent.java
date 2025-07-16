@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +19,7 @@ public class PlannedEvent implements UserOwned{
     private int id;
 
     @Column(name = "scheduled_date")
-    private Instant scheduledDate;
+    private LocalDateTime scheduledDate;
 
     @OneToMany(mappedBy = "plannedEvent", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<EventDetails> eventDetails = new ArrayList<>();
@@ -39,11 +40,11 @@ public class PlannedEvent implements UserOwned{
         this.id = id;
     }
 
-    public Instant getScheduledDate() {
+    public LocalDateTime getScheduledDate() {
         return scheduledDate;
     }
 
-    public void setScheduledDate(Instant scheduledDate) {
+    public void setScheduledDate(LocalDateTime scheduledDate) {
         this.scheduledDate = scheduledDate;
     }
 

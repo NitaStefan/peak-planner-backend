@@ -7,6 +7,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
@@ -25,13 +27,15 @@ public class FlexibleEventService {
 //    }
 
     public List<FlexibleEvent> getUpcomingFlexibleEvents(User currentUser) {
-        Instant theDayBefore = Instant.now().minus(1, ChronoUnit.DAYS);
+        LocalDateTime theDayBefore = LocalDateTime.now(ZoneOffset.UTC).minusDays(1);
+
 
         return flexibleEventDao.findByUserAndEndDateAfterOrderByStartDateAsc(currentUser, theDayBefore);
     }
 
     public List<FlexibleEvent> getPastFlexibleEvents(User currentUser) {
-        Instant theDayBefore = Instant.now().minus(1, ChronoUnit.DAYS);
+        LocalDateTime theDayBefore = LocalDateTime.now(ZoneOffset.UTC).minusDays(1);
+
 
         return flexibleEventDao.findByUserAndEndDateBeforeOrderByEndDateDesc(currentUser, theDayBefore);
     }

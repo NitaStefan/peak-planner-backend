@@ -21,11 +21,6 @@ public class FlexibleEventService {
         this.flexibleEventDao = flexibleEventDao;
     }
 
-//    public List<FlexibleEvent> getFlexibleEvents(User currentUser) {
-//
-//        return flexibleEventDao.findByUserOrderByStartDate(currentUser);
-//    }
-
     public List<FlexibleEvent> getUpcomingFlexibleEvents(User currentUser) {
         LocalDateTime theDayBefore = LocalDateTime.now(ZoneOffset.UTC).minusDays(1);
 

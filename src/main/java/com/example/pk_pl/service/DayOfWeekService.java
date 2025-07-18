@@ -103,18 +103,4 @@ public class DayOfWeekService {
         return dayOfWeekDao.findAll(); // Return the updated week schedule
     }
 
-
-//    @Transactional
-//    public List<DayOfWeek> saveAll(List<DayOfWeek> daysOfWeek) {
-//
-//        for (DayOfWeek dayOfWeek : daysOfWeek)
-//            dayOfWeek.getActivities().forEach(activity -> {
-//                activity.setDayOfWeek(dayOfWeek);
-//                if (activity.getRequestGoalId() > 0) activity.setGoal(goalDao.findById(activity.getRequestGoalId())
-//                        .orElseThrow(() -> new ResourceNotFoundException("Goal not found with ID: " + activity.getRequestGoalId())));
-//
-//            });
-//
-//        return dayOfWeekDao.saveAll(daysOfWeek);
-//    }
 }

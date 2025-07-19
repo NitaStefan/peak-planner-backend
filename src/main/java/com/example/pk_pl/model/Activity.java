@@ -70,16 +70,13 @@ public class Activity {
             return false;
         }
 
-        // Get current UTC time
-        Instant now = Instant.now();
-        ZonedDateTime utcNow = now.atZone(ZoneOffset.UTC);
+        // Extract the LocalTime parts (hh:mm) only
+        LocalTime nowTime = LocalTime.now(ZoneOffset.UTC);
+        LocalTime start = startTime.toLocalTime();
+        LocalTime end = getEndTime().toLocalTime();
 
-        // Convert start and end times to UTC ZonedDateTime for today
-        ZonedDateTime startUtc = utcNow.with(startTime);
-        ZonedDateTime endUtc = utcNow.with(getEndTime());
-
-        // Check if current time is within the interval
-        return !utcNow.isBefore(startUtc) && utcNow.isBefore(endUtc);
+        // Check if the current time is between start and end
+        return !nowTime.isBefore(start) && nowTime.isBefore(end);
     }
 
     @Transient

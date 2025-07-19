@@ -71,7 +71,7 @@ public class Activity {
         }
 
         // Extract the LocalTime parts (hh:mm) only
-        LocalTime nowTime = LocalTime.now(ZoneOffset.UTC);
+        LocalTime nowTime = LocalTime.now(ZoneOffset.UTC).plusHours(1);
         LocalTime start = startTime.toLocalTime();
         LocalTime end = getEndTime().toLocalTime();
 

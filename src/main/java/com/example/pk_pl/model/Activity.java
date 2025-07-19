@@ -79,6 +79,7 @@ public class Activity {
         return !nowTime.isBefore(start) && nowTime.isBefore(end);
     }
 
+
     @Transient
     @JsonProperty("goalTitle")
     @JsonInclude(JsonInclude.Include.NON_NULL)

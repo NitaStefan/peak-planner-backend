@@ -86,7 +86,6 @@ public class Activity {
         return (goal != null) ? goal.getTitle() : null;
     }
 
-
     @JsonIgnore
     public int getRequestGoalId() {
         return goalId;

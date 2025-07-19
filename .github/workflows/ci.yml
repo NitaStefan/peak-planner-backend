@@ -2,9 +2,12 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches:
+      - dev       # Run tests on dev push
+      - main      # Run tests on main push
   pull_request:
-    branches: [main]
+    branches:
+      - main      # Run tests automatically when PR targets main
 
 jobs:
   build:

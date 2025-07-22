@@ -70,18 +70,27 @@ public class Activity {
             return false;
         }
 
-        // Get current time (hour & minute) in UTC
-        LocalTime nowUtc = LocalTime.now(ZoneOffset.UTC);
+        // Romania time zone
+        ZoneId romaniaZone = ZoneId.of("Europe/Bucharest");
 
-        // Apply current time to fixed date: 2000-01-01
-        LocalDate fixedDate = LocalDate.of(2000, 1, 1);
-        LocalDateTime currentFixed = LocalDateTime.of(fixedDate, nowUtc);
+        // Get current LocalTime in Romania
+        ZonedDateTime nowInRomania = ZonedDateTime.now(romaniaZone);
 
-        // Also convert start and end to same fixed date
-        LocalDateTime start = LocalDateTime.of(fixedDate, startTime.toLocalTime());
-        LocalDateTime end = LocalDateTime.of(fixedDate, getEndTime().toLocalTime());
+        // Determine if summer time (DST) is in effect
+        boolean isSummerTime = nowInRomania.getZone().getRules().isDaylightSavings(nowInRomania.toInstant());
 
-        return !currentFixed.isBefore(start) && currentFixed.isBefore(end);
+        // Get UTC time
+        LocalTime nowTime = LocalTime.now(ZoneOffset.UTC);
+        if (isSummerTime) {
+            nowTime = nowTime.plusHours(1); // apply extra hour if summer time
+        }
+
+        // Extract start and end times
+        LocalTime start = startTime.toLocalTime();
+        LocalTime end = getEndTime().toLocalTime();
+
+        // Compare time range
+        return !nowTime.isBefore(start) && nowTime.isBefore(end);
     }
 
 

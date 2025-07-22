@@ -70,14 +70,20 @@ public class Activity {
             return false;
         }
 
-        // Extract the LocalTime parts (hh:mm) only
-        LocalTime nowTime = LocalTime.now(ZoneOffset.UTC).plusHours(1);
-        LocalTime start = startTime.toLocalTime();
-        LocalTime end = getEndTime().toLocalTime();
+        // Get current time (hour & minute) in UTC
+        LocalTime nowUtc = LocalTime.now(ZoneOffset.UTC);
 
-        // Check if the current time is between start and end
-        return !nowTime.isBefore(start) && nowTime.isBefore(end);
+        // Apply current time to fixed date: 2000-01-01
+        LocalDate fixedDate = LocalDate.of(2000, 1, 1);
+        LocalDateTime currentFixed = LocalDateTime.of(fixedDate, nowUtc);
+
+        // Also convert start and end to same fixed date
+        LocalDateTime start = LocalDateTime.of(fixedDate, startTime.toLocalTime());
+        LocalDateTime end = LocalDateTime.of(fixedDate, getEndTime().toLocalTime());
+
+        return !currentFixed.isBefore(start) && currentFixed.isBefore(end);
     }
+
 
 
     @Transient
